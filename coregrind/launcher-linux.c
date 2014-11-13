@@ -199,7 +199,11 @@ static const char *select_platform(const char *clientname)
             if (ehdr->e_machine == EM_MIPS &&
                 (ehdr->e_ident[EI_OSABI] == ELFOSABI_SYSV ||
                  ehdr->e_ident[EI_OSABI] == ELFOSABI_LINUX)) {
-               platform = "mips32-linux";
+	       if (ehdr->e_flags & EF_MIPS_ABI2) {
+                 platform = "mipsn32-linux";
+	       } else {
+                 platform = "mips32-linux";
+	       }
             }
          }
          else if (header[EI_DATA] == ELFDATA2MSB) {
@@ -212,7 +216,11 @@ static const char *select_platform(const char *clientname)
             if (ehdr->e_machine == EM_MIPS &&
                 (ehdr->e_ident[EI_OSABI] == ELFOSABI_SYSV ||
                  ehdr->e_ident[EI_OSABI] == ELFOSABI_LINUX)) {
-               platform = "mips32-linux";
+	       if (ehdr->e_flags & EF_MIPS_ABI2) {
+                 platform = "mipsn32-linux";
+	       } else {
+                 platform = "mips32-linux";
+	       }
             }
          }
 
