@@ -81,14 +81,15 @@ if (($arch eq 'mips') || ($arch eq 'mipsel')
    $extra_args = "-static -Wl,--section-start=.reginfo=$ala";
 } elsif (($arch eq 'mips64') || ($arch eq 'mips64el') ||
          ($arch eq 'mipsisa64el')) {
-   $extra_args = "-static -Wl,--section-start=.MIPS.options=$ala";
+   $extra_args = "-static -Wl,--section-start=.reginfo=$ala";
+   #$extra_args = "-static -Wl,--section-start=.MIPS.options=$ala";
 } else {
    $extra_args = "-static -Wl,@FLAG_T_TEXT@=$ala";
 }
 
 my $cmd = join(" ", @ARGV, $extra_args);
 
-#print "link_tool_exe_linux: $cmd\n";
+print "link_tool_exe_linux: $cmd\n";
 
 
 # Execute the command:
