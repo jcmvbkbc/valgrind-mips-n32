@@ -2034,7 +2034,8 @@ static void add_counter_update(IRSB* sbOut, Int n)
    //   Store(&guest_instrs_executed, t2)
    IRTemp t1 = newIRTemp(sbOut->tyenv, Ity_I64);
    IRTemp t2 = newIRTemp(sbOut->tyenv, Ity_I64);
-   IRExpr* counter_addr = mkIRExpr_HWord( (HWord)&guest_instrs_executed );
+   IRExpr* counter_addr = IRExpr_Const(IRConst_U64((ULong)(HWord)&guest_instrs_executed));
+   //mkIRExpr_HWord( (HWord)&guest_instrs_executed );
 
    IRStmt* st1 = IRStmt_WrTmp(t1, IRExpr_Load(END, Ity_I64, counter_addr));
    IRStmt* st2 =

@@ -717,8 +717,8 @@ void addEvent_Bc ( ClgState* clgs, InstrInfo* inode, IRAtom* guard )
 {
    Event* evt;
    tl_assert(isIRAtom(guard));
-   tl_assert(typeOfIRExpr(clgs->sbOut->tyenv, guard)
-             == (sizeof(HWord)==4 ? Ity_I32 : Ity_I64));
+   //tl_assert(typeOfIRExpr(clgs->sbOut->tyenv, guard)
+   //          == (sizeof(HWord)==4 ? Ity_I32 : Ity_I64));
    if (!CLG_(clo).simulate_branch) return;
 
    if (clgs->events_used == N_EVENTS)
@@ -737,8 +737,8 @@ void addEvent_Bi ( ClgState* clgs, InstrInfo* inode, IRAtom* whereTo )
 {
    Event* evt;
    tl_assert(isIRAtom(whereTo));
-   tl_assert(typeOfIRExpr(clgs->sbOut->tyenv, whereTo)
-             == (sizeof(HWord)==4 ? Ity_I32 : Ity_I64));
+   //tl_assert(typeOfIRExpr(clgs->sbOut->tyenv, whereTo)
+   //          == (sizeof(HWord)==4 ? Ity_I32 : Ity_I64));
    if (!CLG_(clo).simulate_branch) return;
 
    if (clgs->events_used == N_EVENTS)
@@ -839,8 +839,11 @@ Addr IRConst2Addr(IRConst* con)
     Addr addr;
 
     if (sizeof(Addr) == 4) {
-	CLG_ASSERT( con->tag == Ico_U32 );
-	addr = con->Ico.U32;
+	//CLG_ASSERT( con->tag == Ico_U32 );
+	if (con->tag == Ico_U32)
+	    addr = con->Ico.U32;
+	else
+	    addr = con->Ico.U64;
     }
     else if (sizeof(Addr) == 8) {
 	CLG_ASSERT( con->tag == Ico_U64 );
