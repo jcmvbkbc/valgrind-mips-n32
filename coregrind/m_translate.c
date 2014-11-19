@@ -1261,6 +1261,11 @@ Bool mk_preamble__set_NRADDR_to_zero ( void* closureV, IRSB* bb )
    Int offB_GPR25 = offsetof(VexGuestMIPS32State, guest_r25);
    addStmtToIRSB(bb, IRStmt_Put(offB_GPR25, mkU32(closure->readdr)));
 #  endif
+#  if defined(VGP_mipsn32_linux)
+   VgCallbackClosure* closure = (VgCallbackClosure*)closureV;
+   Int offB_GPR25 = offsetof(VexGuestMIPS64State, guest_r25);
+   addStmtToIRSB(bb, IRStmt_Put(offB_GPR25, mkU64(closure->readdr)));
+#  endif
 #  if defined(VGP_mips64_linux)
    VgCallbackClosure* closure = (VgCallbackClosure*)closureV;
    Int offB_GPR25 = offsetof(VexGuestMIPS64State, guest_r25);
@@ -1320,7 +1325,7 @@ Bool mk_preamble__set_NRADDR_to_nraddr ( void* closureV, IRSB* bb )
    Int offB_GPR25 = offsetof(VexGuestMIPS32State, guest_r25);
    addStmtToIRSB(bb, IRStmt_Put(offB_GPR25, mkU32(closure->readdr)));
 #  endif
-#  if defined(VGP_mips64_linux)
+#  if defined(VGP_mips64_linux) || defined(VGP_mipsn32_linux)
    Int offB_GPR25 = offsetof(VexGuestMIPS64State, guest_r25);
    addStmtToIRSB(bb, IRStmt_Put(offB_GPR25, mkU64(closure->readdr)));
 #  endif

@@ -121,6 +121,7 @@
 #undef PLAT_arm64_linux
 #undef PLAT_s390x_linux
 #undef PLAT_mips32_linux
+#undef PLAT_mipsn32_linux
 #undef PLAT_mips64_linux
 
 
@@ -153,8 +154,10 @@
 #  define PLAT_arm64_linux 1
 #elif defined(__linux__) && defined(__s390__) && defined(__s390x__)
 #  define PLAT_s390x_linux 1
-#elif defined(__linux__) && defined(__mips__) && (__mips==64)
+#elif defined(__linux__) && defined(__mips__) && (__mips==64) && (_MIPS_SZLONG == 64)
 #  define PLAT_mips64_linux 1
+#elif defined(__linux__) && defined(__mips__) && (__mips==64) && (_MIPS_SZLONG == 32)
+#  define PLAT_mipsn32_linux 1
 #elif defined(__linux__) && defined(__mips__) && (__mips!=64)
 #  define PLAT_mips32_linux 1
 #else
@@ -965,6 +968,77 @@ typedef
 
 
 #endif /* PLAT_mips32_linux */
+
+/* ------------------------- mipsn32-linux ---------------- */
+
+#if defined(PLAT_mipsn32_linux)
+
+typedef
+   struct {
+      unsigned int nraddr; /* where's the code? */
+   }
+   OrigFn;
+
+/* dsll $0,$0, 3
+ * dsll $0,$0, 13
+ * dsll $0,$0, 29
+ * dsll $0,$0, 19*/
+#define __SPECIAL_INSTRUCTION_PREAMBLE                              \
+                     "dsll $0,$0, 3 ; dsll $0,$0,13\n\t"            \
+                     "dsll $0,$0,29 ; dsll $0,$0,19\n\t"
+
+#define VALGRIND_DO_CLIENT_REQUEST_EXPR(                          \
+       _zzq_default, _zzq_request,                                \
+       _zzq_arg1, _zzq_arg2, _zzq_arg3, _zzq_arg4, _zzq_arg5)     \
+  __extension__                                                   \
+  ({ volatile unsigned int _zzq_args[6];                          \
+    volatile unsigned int _zzq_result;                            \
+    _zzq_args[0] = (unsigned int)(_zzq_request);                  \
+    _zzq_args[1] = (unsigned int)(_zzq_arg1);                     \
+    _zzq_args[2] = (unsigned int)(_zzq_arg2);                     \
+    _zzq_args[3] = (unsigned int)(_zzq_arg3);                     \
+    _zzq_args[4] = (unsigned int)(_zzq_arg4);                     \
+    _zzq_args[5] = (unsigned int)(_zzq_arg5);                     \
+        __asm__ volatile("move $11, %1\n\t" /*default*/           \
+                     "move $12, %2\n\t" /*ptr*/                   \
+                     __SPECIAL_INSTRUCTION_PREAMBLE               \
+                     /* T3 = client_request ( T4 ) */             \
+                     "or $13, $13, $13\n\t"                       \
+                     "move %0, $11\n\t"     /*result*/            \
+                     : "=r" (_zzq_result)                         \
+                     : "r" (_zzq_default), "r" (&_zzq_args[0])    \
+                     : "$11", "$12");                             \
+    _zzq_result;                                                  \
+  })
+
+#define VALGRIND_GET_NR_CONTEXT(_zzq_rlval)                       \
+  { volatile OrigFn* _zzq_orig = &(_zzq_rlval);                   \
+    volatile unsigned int __addr;                                 \
+    __asm__ volatile(__SPECIAL_INSTRUCTION_PREAMBLE               \
+                     /* %t9 = guest_NRADDR */                     \
+                     "or $14, $14, $14\n\t"                       \
+                     "move %0, $11"     /*result*/                \
+                     : "=r" (__addr)                              \
+                     :                                            \
+                     : "$11"                                      \
+                    );                                            \
+    _zzq_orig->nraddr = __addr;                                   \
+  }
+
+#define VALGRIND_CALL_NOREDIR_T9                                 \
+                     __SPECIAL_INSTRUCTION_PREAMBLE              \
+                     /* call-noredir *%t9 */                     \
+                     "or $15, $15, $15\n\t"
+
+#define VALGRIND_VEX_INJECT_IR()                                 \
+ do {                                                            \
+    __asm__ volatile(__SPECIAL_INSTRUCTION_PREAMBLE              \
+                     "or $11, $11, $11\n\t"                      \
+                    );                                           \
+ } while (0)
+
+
+#endif /* PLAT_mipsn32_linux */
 
 /* ------------------------- mips64-linux ---------------- */
 
@@ -5129,7 +5203,7 @@ typedef
 
 /* ------------------------- mips32-linux ----------------------- */
  
-#if defined(PLAT_mips32_linux)
+#if defined(PLAT_mips32_linux) || defined(PLAT_mipsn32_linux)
 
 /* These regs are trashed by the hidden call. */
 #define __CALLER_SAVED_REGS "$2", "$3", "$4", "$5", "$6",       \
@@ -6582,6 +6656,7 @@ VALGRIND_PRINTF_BACKTRACE(const char *format, ...)
 #undef PLAT_arm_linux
 #undef PLAT_s390x_linux
 #undef PLAT_mips32_linux
+#undef PLAT_mipsn32_linux
 #undef PLAT_mips64_linux
 
 #endif   /* __VALGRIND_H */

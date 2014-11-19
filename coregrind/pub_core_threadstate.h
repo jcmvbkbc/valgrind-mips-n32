@@ -94,6 +94,8 @@ typedef
    typedef VexGuestS390XState VexGuestArchState;
 #elif defined(VGA_mips32)
    typedef VexGuestMIPS32State VexGuestArchState;
+#elif defined(VGA_mipsn32)
+   typedef VexGuestMIPS64State VexGuestArchState;
 #elif defined(VGA_mips64)
    typedef VexGuestMIPS64State VexGuestArchState;
 #else

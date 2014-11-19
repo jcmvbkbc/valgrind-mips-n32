@@ -64,6 +64,8 @@
 #  include "libvex_guest_s390x.h"
 #elif defined(VGA_mips32)
 #  include "libvex_guest_mips32.h"
+#elif defined(VGA_mipsn32)
+#  include "libvex_guest_mips64.h"
 #elif defined(VGA_mips64)
 #  include "libvex_guest_mips64.h"
 #else

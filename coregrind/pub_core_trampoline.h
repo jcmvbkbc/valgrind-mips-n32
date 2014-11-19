@@ -151,6 +151,12 @@ extern Addr  VG_(mips32_linux_SUBST_FOR_rt_sigreturn);
 extern UInt  VG_(mips32_linux_REDIR_FOR_strlen)( void* );
 #endif
 
+#if defined(VGP_mipsn32_linux)
+extern Addr  VG_(mipsn32_linux_SUBST_FOR_sigreturn);
+extern Addr  VG_(mipsn32_linux_SUBST_FOR_rt_sigreturn);
+extern UInt  VG_(mipsn32_linux_REDIR_FOR_strlen)( void* );
+#endif
+
 #if defined(VGP_mips64_linux)
 extern Addr  VG_(mips64_linux_SUBST_FOR_rt_sigreturn);
 extern UInt  VG_(mips64_linux_REDIR_FOR_strlen)( void* );

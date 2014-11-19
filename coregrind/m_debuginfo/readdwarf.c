@@ -1763,6 +1763,10 @@ void ML_(read_debuginfo_dwarf1) (
 #  define FP_REG         30
 #  define SP_REG         29
 #  define RA_REG_DEFAULT 31
+#elif defined(VGP_mipsn32_linux)
+#  define FP_REG         30
+#  define SP_REG         29
+#  define RA_REG_DEFAULT 31
 #elif defined(VGP_mips64_linux)
 #  define FP_REG         30
 #  define SP_REG         29
@@ -1777,7 +1781,7 @@ void ML_(read_debuginfo_dwarf1) (
    might exist, for Neon/VFP-v3. */
 #if defined(VGP_ppc32_linux) || defined(VGP_ppc64be_linux) \
      || defined(VGP_ppc64le_linux) || defined(VGP_mips32_linux) \
-     || defined(VGP_mips64_linux)
+     || defined(VGP_mipsn32_linux) || defined(VGP_mips64_linux)
 # define N_CFI_REGS 72
 #elif defined(VGP_arm_linux)
 # define N_CFI_REGS 320
@@ -2089,7 +2093,7 @@ static Bool summarise_context(/*OUT*/Addr* base,
    if (ctxs->cfa_is_regoff && ctxs->cfa_reg == SP_REG) {
       si_m->cfa_off = ctxs->cfa_off;
 #     if defined(VGA_x86) || defined(VGA_amd64) || defined(VGA_s390x) \
-         || defined(VGA_mips32) || defined(VGA_mips64)
+         || defined(VGA_mips32) || defined(VGA_mipsn32) || defined(VGA_mips64)
       si_m->cfa_how = CFIC_IA_SPREL;
 #     elif defined(VGA_arm)
       si_m->cfa_how = CFIC_ARM_R13REL;
@@ -2103,7 +2107,7 @@ static Bool summarise_context(/*OUT*/Addr* base,
    if (ctxs->cfa_is_regoff && ctxs->cfa_reg == FP_REG) {
       si_m->cfa_off = ctxs->cfa_off;
 #     if defined(VGA_x86) || defined(VGA_amd64) || defined(VGA_s390x) \
-         || defined(VGA_mips32) || defined(VGA_mips64)
+         || defined(VGA_mips32) || defined(VGA_mipsn32) || defined(VGA_mips64)
       si_m->cfa_how = CFIC_IA_BPREL;
 #     elif defined(VGA_arm)
       si_m->cfa_how = CFIC_ARM_R12REL;
@@ -2351,7 +2355,7 @@ static Bool summarise_context(/*OUT*/Addr* base,
 
    return True;
 
-#  elif defined(VGA_mips32) || defined(VGA_mips64)
+#  elif defined(VGA_mips32) || defined(VGA_mipsn32) || defined(VGA_mips64)
  
    /* --- entire tail of this fn specialised for mips --- */
  
@@ -2479,7 +2483,7 @@ static Int copy_convert_CfiExpr_tree ( XArray*        dstxa,
             return ML_(CfiExpr_CfiReg)( dstxa, Creg_IA_BP );
          if (dwreg == srcuc->ra_reg)
             return ML_(CfiExpr_CfiReg)( dstxa, Creg_IA_IP ); /* correct? */
-#        elif defined(VGA_mips32) || defined(VGA_mips64)
+#        elif defined(VGA_mips32) || defined(VGA_mipsn32) || defined(VGA_mips64)
          if (dwreg == SP_REG)
             return ML_(CfiExpr_CfiReg)( dstxa, Creg_IA_SP );
          if (dwreg == FP_REG)

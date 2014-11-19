@@ -20,7 +20,7 @@ __asm__ __volatile__
     "syscall\n\t"
     : : : "eax", "ebx", "rdi"
     );
-#elif defined(VGA_mips32) || defined(VGA_mips64)
+#elif defined(VGA_mips32) || defined(VGA_mipsn32) || defined(VGA_mips64)
 __asm__ __volatile__
    ("li $t0, 42\n\t"
     "top:\n\t"

@@ -801,6 +801,8 @@ void valgrind_initialize_target(void)
    s390x_init_architecture(&the_low_target);
 #elif defined(VGA_mips32)
    mips32_init_architecture(&the_low_target);
+#elif defined(VGA_mipsn32)
+   mips64_init_architecture(&the_low_target);
 #elif defined(VGA_mips64)
    mips64_init_architecture(&the_low_target);
 #else

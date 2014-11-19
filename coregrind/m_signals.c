@@ -548,6 +548,25 @@ typedef struct SigQueue {
         (srP)->misc.MIPS32.r28 = (uc)->uc_mcontext.sc_regs[28]; \
       }
 
+#elif defined(VGP_mipsn32_linux)
+#  define VG_UCONTEXT_INSTR_PTR(uc)   ((UWord)(((uc)->uc_mcontext.sc_pc)))
+#  define VG_UCONTEXT_STACK_PTR(uc)   ((UWord)((uc)->uc_mcontext.sc_regs[29]))
+#  define VG_UCONTEXT_FRAME_PTR(uc)       ((uc)->uc_mcontext.sc_regs[30])
+#  define VG_UCONTEXT_SYSCALL_NUM(uc)     ((uc)->uc_mcontext.sc_regs[2])
+#  define VG_UCONTEXT_SYSCALL_SYSRES(uc)                         \
+      /* Convert the value in uc_mcontext.rax into a SysRes. */  \
+      VG_(mk_SysRes_mips32_linux)( (uc)->uc_mcontext.sc_regs[2], \
+                                   (uc)->uc_mcontext.sc_regs[3], \
+                                   (uc)->uc_mcontext.sc_regs[7])
+
+#  define VG_UCONTEXT_TO_UnwindStartRegs(srP, uc)              \
+      { (srP)->r_pc = (uc)->uc_mcontext.sc_pc;                 \
+        (srP)->r_sp = (uc)->uc_mcontext.sc_regs[29];           \
+        (srP)->misc.MIPS64.r30 = (uc)->uc_mcontext.sc_regs[30]; \
+        (srP)->misc.MIPS64.r31 = (uc)->uc_mcontext.sc_regs[31]; \
+        (srP)->misc.MIPS64.r28 = (uc)->uc_mcontext.sc_regs[28]; \
+      }
+
 #elif defined(VGP_mips64_linux)
 #  define VG_UCONTEXT_INSTR_PTR(uc)       (((uc)->uc_mcontext.sc_pc))
 #  define VG_UCONTEXT_STACK_PTR(uc)       ((uc)->uc_mcontext.sc_regs[29])
@@ -933,6 +952,14 @@ extern void my_sigreturn(void);
    "	syscall\n" \
    ".previous\n"
 
+#elif defined(VGP_mipsn32_linux)
+#  define _MY_SIGRETURN(name) \
+   ".text\n" \
+   "my_sigreturn:\n" \
+   "	li	$2, " #name "\n" /* apparently $2 is v0 */ \
+   "	syscall\n" \
+   ".previous\n"
+
 #elif defined(VGP_mips64_linux)
 #  define _MY_SIGRETURN(name) \
    ".text\n" \
@@ -1018,7 +1045,7 @@ static void handle_SCSS_change ( Bool force_update )
                    == skss_old.skss_per_sig[sig].skss_flags);
 #        if !defined(VGP_ppc32_linux) && \
             !defined(VGP_x86_darwin) && !defined(VGP_amd64_darwin) && \
-            !defined(VGP_mips32_linux) && !defined(VGP_mips64_linux)
+            !defined(VGP_mips32_linux) && !defined(VGP_mipsn32_linux) && !defined(VGP_mips64_linux)
          vg_assert(ksa_old.sa_restorer == my_sigreturn);
 #        endif
          VG_(sigaddset)( &ksa_old.sa_mask, VKI_SIGKILL );
@@ -2010,7 +2037,7 @@ void VG_(synth_sigtrap)(ThreadId tid)
 void VG_(synth_sigfpe)(ThreadId tid, UInt code)
 {
 // Only tested on mips32 and mips64
-#if !defined(VGA_mips32) && !defined(VGA_mips64)
+#if !defined(VGA_mips32) && !defined(VGA_mipsn32) && !defined(VGA_mips64)
    vg_assert(0);
 #else
    vki_siginfo_t info;

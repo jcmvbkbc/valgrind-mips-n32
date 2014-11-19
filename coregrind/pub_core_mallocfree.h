@@ -76,6 +76,7 @@ typedef Int ArenaId;
       defined(VGP_ppc64be_linux)  || \
       defined(VGP_ppc64le_linux)  || \
       defined(VGP_s390x_linux)    || \
+      defined(VGP_mipsn32_linux)  || \
       defined(VGP_mips64_linux)   || \
       defined(VGP_x86_darwin)     || \
       defined(VGP_amd64_darwin)   || \

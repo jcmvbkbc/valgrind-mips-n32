@@ -29,7 +29,7 @@
    The GNU General Public License is contained in the file COPYING.
 */
 
-#if defined(VGP_mips64_linux)
+#if defined(VGP_mipsn32_linux) || defined(VGP_mips64_linux)
 
 #include "pub_core_basics.h"
 #include "pub_core_vki.h"
@@ -225,7 +225,13 @@ void VG_(sigframe_create) ( ThreadId tid,
    if (flags & VKI_SA_RESTORER) 
       tst->arch.vex.guest_r31 = (Addr) restorer;
    else 
+#if defined(VGP_mips64_linux)
       tst->arch.vex.guest_r31 = (Addr)&VG_(mips64_linux_SUBST_FOR_rt_sigreturn);
+#elif defined(VGP_mipsn32_linux)
+      tst->arch.vex.guest_r31 = (Addr)&VG_(mipsn32_linux_SUBST_FOR_rt_sigreturn);
+#else
+#error Wrong arch!
+#endif
 
    priv->magicPI       = 0x31415927;
    priv->sigNo_private = sigNo;

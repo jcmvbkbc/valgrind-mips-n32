@@ -175,7 +175,7 @@
         (srP)->misc.S390X.r_fp = fp;                      \
         (srP)->misc.S390X.r_lr = lr;                      \
       }
-#elif defined(VGP_mips32_linux)
+#elif defined(VGP_mips32_linux) || defined(VGP_mipsn32_linux)
 #  define GET_STARTREGS(srP)                              \
       { UInt pc, sp, fp, ra, gp;                          \
       asm("move $8, $31;"             /* t0 = ra */       \

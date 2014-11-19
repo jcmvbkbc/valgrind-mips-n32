@@ -714,6 +714,25 @@ asm(
 ".end do_syscall_WRK\n"
 );
 
+#elif defined(VGP_mipsn32_linux)
+extern UWord do_syscall_WRK ( UWord a1, UWord a2, UWord a3, UWord a4, UWord a5,
+                              UWord a6, UWord syscall_no, ULong* V1_val );
+asm (
+".text\n"
+".globl do_syscall_WRK\n"
+"do_syscall_WRK:\n"
+"   daddiu $29, $29, -8\n"
+"   sd $11, 0($29)\n"
+"   move $2, $10\n"
+"   syscall\n"
+"   ld $11, 0($29)\n"
+"   daddiu $29, $29, 8\n"
+"   sd $3, 0($11)\n"  /* store vale of v1 in last param */
+"   sd $7, 8($11)\n"  /* store vale of a3 in last param */
+"   jr $31\n"
+".previous\n"
+);
+
 #elif defined(VGP_mips64_linux)
 extern UWord do_syscall_WRK ( UWord a1, UWord a2, UWord a3, UWord a4, UWord a5,
                               UWord a6, UWord syscall_no, ULong* V1_val );
@@ -851,6 +870,15 @@ SysRes VG_(do_syscall) ( UWord sysno, UWord a1, UWord a2, UWord a3,
    UWord valLo = 0;
    (void) do_syscall_WRK(a1,a2,a3,a4,a5,a6, sysno,&err,&valHi,&valLo);
    return VG_(mk_SysRes_mips32_linux)( valLo, valHi, (ULong)err );
+
+#elif defined(VGP_mipsn32_linux)
+   ULong v1_a3[2];
+   v1_a3[0] = 0xFF00;
+   v1_a3[1] = 0xFF00;
+   ULong V0 = do_syscall_WRK(a1,a2,a3,a4,a5,a6,sysno,v1_a3);
+   ULong V1 = (ULong)v1_a3[0];
+   ULong A3 = (ULong)v1_a3[1];
+   return VG_(mk_SysRes_mips64_linux)( V0, V1, A3 );
 
 #elif defined(VGP_mips64_linux)
    ULong v1_a3[2];
