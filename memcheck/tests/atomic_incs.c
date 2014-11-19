@@ -145,7 +145,7 @@ __attribute__((noinline)) void atomic_add_8bit ( char* p, int n )
       : "+m" (*p), "+m" (dummy)
       : "d" (n)
       : "cc", "memory", "0", "1");
-#elif defined(VGA_mips32)
+#elif defined(VGA_mips32) || defined(VGA_mipsn32)
    /* We rely on the fact that p is 4-aligned. Otherwise 'll' may throw an
       exception that can cause this function to fail. */
 #if defined (_MIPSEL)

@@ -86,6 +86,11 @@
 # define MC_SIZEOF_GUEST_STATE sizeof(VexGuestMIPS32State)
 #endif
 
+#if defined(VGA_mipsn32)
+# include "libvex_guest_mips64.h"
+# define MC_SIZEOF_GUEST_STATE sizeof(VexGuestMIPS64State)
+#endif
+
 #if defined(VGA_mips64)
 # include "libvex_guest_mips64.h"
 # define MC_SIZEOF_GUEST_STATE sizeof(VexGuestMIPS64State)
@@ -1193,7 +1198,7 @@ static Int get_otrack_shadow_offset_wrk ( Int offset, Int szB )
 
    /* --------------------- mips64 --------------------- */
 
-#  elif defined(VGA_mips64)
+#  elif defined(VGA_mipsn32) || defined(VGA_mips64)
 
 #  define GOF(_fieldname) \
       (offsetof(VexGuestMIPS64State,guest_##_fieldname))
@@ -1374,6 +1379,13 @@ IRType MC_(get_otrack_reg_array_equiv_int_type) ( IRRegArray* arr )
 /* --------------------- mips32 --------------------- */
 #  elif defined(VGA_mips32)
    VG_(printf)("get_reg_array_equiv_int_type(mips32): unhandled: ");
+   ppIRRegArray(arr);
+   VG_(printf)("\n");
+   tl_assert(0);
+
+/* --------------------- mipsn32 --------------------- */
+#  elif defined(VGA_mipsn32)
+   VG_(printf)("get_reg_array_equiv_int_type(mipsn32): unhandled: ");
    ppIRRegArray(arr);
    VG_(printf)("\n");
    tl_assert(0);
