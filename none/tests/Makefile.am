@@ -257,7 +257,7 @@ if VGCONF_OS_IS_DARWIN
  nestedfns_CFLAGS	= $(AM_CFLAGS) -fnested-functions
 else
  nestedfns_CFLAGS	= $(AM_CFLAGS)
- mq_LDADD		= -lrt
+ mq_LDADD		= -lrt -lpthread
 endif
 pth_atfork1_LDADD	= -lpthread
 pth_blockedsig_LDADD	= -lpthread

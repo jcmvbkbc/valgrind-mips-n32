@@ -431,7 +431,8 @@ sub do_one_test($$)
         } else {
             # Bad prereq; abort.
             $prereq_res /= 256;
-            die "prereq returned $prereq_res: $prereq\n";
+            printf("prereq returned $prereq_res: $prereq\n");
+            return;
         }
     }
 

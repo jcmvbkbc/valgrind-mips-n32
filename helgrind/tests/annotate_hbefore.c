@@ -219,7 +219,7 @@ UWord do_acasW(UWord* addr, UWord expected, UWord nyu )
    return cc == 0;
 }
 
-#elif defined(VGA_mips32)
+#elif defined(VGA_mips32) || defined(VGA_mipsn32)
 
 // mips32
 /* return 1 if success, 0 if failure */

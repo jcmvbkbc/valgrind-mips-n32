@@ -361,7 +361,7 @@ __attribute__((noinline)) void atomic_add_16bit ( short* p, int n )
       : "+m" (*p), "+m" (dummy)
       : "d" (n)
       : "cc", "memory", "0", "1");
-#elif defined(VGA_mips32)
+#elif defined(VGA_mips32) || defined(VGA_mipsn32)
    /* We rely on the fact that p is 4-aligned. Otherwise 'll' may throw an
       exception that can cause this function to fail. */
 #if defined (_MIPSEL)
@@ -570,7 +570,7 @@ __attribute__((noinline)) void atomic_add_32bit ( int* p, int n )
       : "+m" (*p)
       : "d" (n)
       : "cc", "memory", "0", "1");
-#elif defined(VGA_mips32)
+#elif defined(VGA_mips32) || defined(VGA_mipsn32)
    unsigned int block[3]
       = { (unsigned int)p, (unsigned int)n, 0x0 };
    do {
@@ -611,7 +611,7 @@ __attribute__((noinline)) void atomic_add_32bit ( int* p, int n )
 
 __attribute__((noinline)) void atomic_add_64bit ( long long int* p, int n ) 
 {
-#if defined(VGA_x86) || defined(VGA_ppc32) || defined(VGA_mips32)
+#if defined(VGA_x86) || defined(VGA_ppc32) || defined(VGA_mips32) || defined(VGA_mipsn32)
    /* do nothing; is not supported */
 #elif defined(VGA_amd64)
    // this is a bit subtle.  It relies on the fact that, on a 64-bit platform,
