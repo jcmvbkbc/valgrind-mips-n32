@@ -1,0 +1,14 @@
+##----------------------------------------------------------------------##
+# MontaVista CGL6 on Octeon2, n32
+{
+   Montavista CGL6
+   Memcheck:Cond
+   obj:/lib32/ld-2.11.1.so
+   obj:/lib32/ld-2.11.1.so
+}
+{
+   Montavista CGL6
+   Memcheck:Addr4
+   obj:/lib32/ld-2.11.1.so
+   obj:/lib32/ld-2.11.1.so
+}

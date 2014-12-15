@@ -46,7 +46,7 @@ SUPP_FILES = \
 	darwin9.supp darwin9-drd.supp \
 	darwin10.supp darwin10-drd.supp \
 	darwin11.supp darwin12.supp darwin13.supp \
-	bionic.supp
+	bionic.supp mv-cgl6.supp
 DEFAULT_SUPP_FILES = @DEFAULT_SUPP@
 
 # We include all the base .supp files in the distribution, but not

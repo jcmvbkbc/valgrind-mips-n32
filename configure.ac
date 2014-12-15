@@ -976,6 +976,7 @@ case "${GLIBC_VERSION}" in
 	DEFAULT_SUPP="glibc-2.X.supp ${DEFAULT_SUPP}"
 	DEFAULT_SUPP="$srcdir/glibc-2.34567-NPTL-helgrind.supp ${DEFAULT_SUPP}"
 	DEFAULT_SUPP="$srcdir/glibc-2.X-drd.supp ${DEFAULT_SUPP}"
+	DEFAULT_SUPP="$srcdir/mv-cgl6.supp ${DEFAULT_SUPP}"
         ;;
      2.12)
 	AC_MSG_RESULT(2.12 family)
