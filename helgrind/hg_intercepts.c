@@ -295,7 +295,7 @@ static int pthread_create_WRK(pthread_t *thread, const pthread_attr_t *attr,
    return ret;
 }
 #if defined(VGO_linux)
-   PTH_FUNC(int, pthreadZucreateZAZa, // pthread_create@*
+   PTH_FUNC(int, pthreadZucreate, // pthread_create@*
                  pthread_t *thread, const pthread_attr_t *attr,
                  void *(*start) (void *), void *arg) {
       return pthread_create_WRK(thread, attr, start, arg);
