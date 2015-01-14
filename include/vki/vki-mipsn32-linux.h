@@ -655,7 +655,7 @@ struct vki_pollfd {
 #define VKI_ELF_NGREG           45  /* includes nip, msr, lr, etc. */
 #define VKI_ELF_NFPREG          33  /* includes fpscr */
 
-typedef unsigned long vki_elf_greg_t;
+typedef unsigned long long vki_elf_greg_t;
 typedef vki_elf_greg_t vki_elf_gregset_t[VKI_ELF_NGREG];
 
 typedef double vki_elf_fpreg_t;
@@ -782,29 +782,29 @@ struct vki_shminfo64 {
 struct vki_pt_regs {
 #ifdef CONFIG_32BIT
         /* Pad bytes for argument save space on the stack. */
-       unsigned long pad0[6];
+       unsigned long long pad0[6];
 #endif
 
        /* Saved main processor registers. */
-       unsigned long regs[32];
+       unsigned long long regs[32];
 
        /* Saved special registers. */
-       unsigned long cp0_status;
-       unsigned long hi;
-       unsigned long lo;
-#ifdef CONFIG_CPU_HAS_SMARTMIPS
-       unsigned long acx;
-#endif
-       unsigned long cp0_badvaddr;
-       unsigned long cp0_cause;
-       unsigned long cp0_epc;
+       unsigned long long cp0_status;
+       unsigned long long hi;
+       unsigned long long lo;
+//#ifdef CONFIG_CPU_HAS_SMARTMIPS
+       unsigned long long acx;
+//#endif
+       unsigned long long cp0_badvaddr;
+       unsigned long long cp0_cause;
+       unsigned long long cp0_epc;
 #ifdef CONFIG_MIPS_MT_SMTC
-       unsigned long cp0_tcstatus;
+       unsigned long long cp0_tcstatus;
 #endif /* CONFIG_MIPS_MT_SMTC */
-#ifdef CONFIG_CPU_CAVIUM_OCTEON
+//#ifdef CONFIG_CPU_CAVIUM_OCTEON
        unsigned long long mpl[3];        /* MTM{0,1,2} */
        unsigned long long mtp[3];        /* MTP{0,1,2} */
-#endif
+//#endif
 } __attribute__ ((aligned (8)));
 
 
