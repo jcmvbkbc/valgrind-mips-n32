@@ -715,8 +715,8 @@ asm(
 );
 
 #elif defined(VGP_mipsn32_linux)
-extern UWord do_syscall_WRK ( UWord a1, UWord a2, UWord a3, UWord a4, UWord a5,
-                              UWord a6, UWord syscall_no, ULong* V1_val );
+extern ULong do_syscall_WRK ( ULong a1, ULong a2, ULong a3, ULong a4, ULong a5,
+                              ULong a6, ULong syscall_no, ULong* V1_val );
 asm (
 ".text\n"
 ".globl do_syscall_WRK\n"
@@ -760,9 +760,9 @@ asm (
 /* Finally, the generic code.  This sends the call to the right
    helper. */
 
-SysRes VG_(do_syscall) ( UWord sysno, UWord a1, UWord a2, UWord a3,
-                                      UWord a4, UWord a5, UWord a6,
-                                      UWord a7, UWord a8 )
+SysRes VG_(do_syscall) ( UReg sysno, UReg a1, UReg a2, UReg a3,
+                                      UReg a4, UReg a5, UReg a6,
+                                      UReg a7, UReg a8 )
 {
 #  if defined(VGP_x86_linux)
    UWord val = do_syscall_WRK(sysno,a1,a2,a3,a4,a5,a6);

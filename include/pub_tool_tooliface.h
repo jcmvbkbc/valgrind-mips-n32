@@ -437,9 +437,9 @@ extern void VG_(needs_client_requests) (
 // possibly including some trailing zeroes.
 extern void VG_(needs_syscall_wrapper) (
                void (* pre_syscall)(ThreadId tid, UInt syscallno,
-                                    UWord* args, UInt nArgs),
+                                    UReg* args, UInt nArgs),
                void (*post_syscall)(ThreadId tid, UInt syscallno,
-                                    UWord* args, UInt nArgs, SysRes res)
+                                    UReg* args, UInt nArgs, SysRes res)
 );
 
 /* Are tool-state sanity checks performed? */

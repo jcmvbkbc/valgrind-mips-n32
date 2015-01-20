@@ -5394,7 +5394,9 @@ PRE(sys_ioctl)
 {
    *flags |= SfMayBlock;
 
+#if !defined(VGP_mipsn32_linux)
    ARG2 = (UInt)ARG2;
+#endif
 
    // We first handle the ones that don't use ARG3 (even as a
    // scalar/non-pointer argument).

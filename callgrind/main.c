@@ -1719,7 +1719,7 @@ UInt syscalltime[VG_N_THREADS];
 
 static
 void CLG_(pre_syscalltime)(ThreadId tid, UInt syscallno,
-                           UWord* args, UInt nArgs)
+                           UReg* args, UInt nArgs)
 {
   if (CLG_(clo).collect_systime) {
 #if CLG_MICROSYSTIME
@@ -1734,7 +1734,7 @@ void CLG_(pre_syscalltime)(ThreadId tid, UInt syscallno,
 
 static
 void CLG_(post_syscalltime)(ThreadId tid, UInt syscallno,
-                            UWord* args, UInt nArgs, SysRes res)
+                            UReg* args, UInt nArgs, SysRes res)
 {
   if (CLG_(clo).collect_systime &&
       CLG_(current_state).bbcc) {

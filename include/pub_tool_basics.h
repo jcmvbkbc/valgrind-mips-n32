@@ -86,6 +86,16 @@
 typedef unsigned long          UWord;     // 32             64
 typedef   signed long           Word;     // 32             64
 
+#if VEX_HOST_REGISTERSIZE == 4
+typedef UWord                  UReg;
+typedef Word                    Reg;
+#elif VEX_HOST_REGISTERSIZE == 8
+typedef ULong                  UReg;
+typedef Long                    Reg;
+#else
+#error Unsupported host register size
+#endif
+
 // Addr is for holding an address.  AddrH was intended to be "Addr on the
 // host", for the notional case where host word size != guest word size.
 // But since the assumption that host arch == guest arch has become so
@@ -162,8 +172,8 @@ typedef UInt ThreadId;
 #if defined(VGO_linux)
 typedef
    struct {
-      UWord _val;
-      UWord _valEx;   // only used on mips-linux
+      UReg  _val;
+      UReg  _valEx;   // only used on mips-linux
       Bool  _isError;
    }
    SysRes;
@@ -195,16 +205,16 @@ typedef
 static inline Bool sr_isError ( SysRes sr ) {
    return sr._isError;
 }
-static inline UWord sr_Res ( SysRes sr ) {
+static inline UReg sr_Res ( SysRes sr ) {
    return sr._isError ? 0 : sr._val;
 }
-static inline UWord sr_ResEx ( SysRes sr ) {
+static inline UReg sr_ResEx ( SysRes sr ) {
    return sr._isError ? 0 : sr._valEx;
 }
-static inline UWord sr_ResHI ( SysRes sr ) {
+static inline UReg sr_ResHI ( SysRes sr ) {
    return 0;
 }
-static inline UWord sr_Err ( SysRes sr ) {
+static inline UReg sr_Err ( SysRes sr ) {
    return sr._isError ? sr._val : 0;
 }
 static inline Bool sr_EQ ( SysRes sr1, SysRes sr2 ) {

@@ -277,8 +277,8 @@ void VG_(needs_client_requests)(
 }
 
 void VG_(needs_syscall_wrapper)(
-   void(*pre) (ThreadId, UInt, UWord*, UInt),
-   void(*post)(ThreadId, UInt, UWord*, UInt, SysRes res)
+   void(*pre) (ThreadId, UInt, UReg*, UInt),
+   void(*post)(ThreadId, UInt, UReg*, UInt, SysRes res)
 )
 {
    VG_(needs).syscall_wrapper = True;

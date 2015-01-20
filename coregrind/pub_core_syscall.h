@@ -46,10 +46,10 @@
 // because the top 32-bits might not be zeroed appropriately, eg. as would
 // happen with the 6th arg on AMD64 which is passed on the stack.
 
-extern SysRes VG_(do_syscall) ( UWord sysno, 
-                                UWord, UWord, UWord, 
-                                UWord, UWord, UWord, 
-                                UWord, UWord );
+extern SysRes VG_(do_syscall) ( UReg sysno, 
+                                UReg, UReg, UReg, 
+                                UReg, UReg, UReg, 
+                                UReg, UReg );
 
 /* Macros make life easier. */
 

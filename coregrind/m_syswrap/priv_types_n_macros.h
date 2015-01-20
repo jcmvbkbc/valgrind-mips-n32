@@ -52,15 +52,15 @@
 /* Arguments for a syscall. */
 typedef
    struct SyscallArgs {
-      Word sysno;
-      UWord arg1;
-      UWord arg2;
-      UWord arg3;
-      UWord arg4;
-      UWord arg5;
-      UWord arg6;
-      UWord arg7;
-      UWord arg8;
+      Reg sysno;
+      UReg arg1;
+      UReg arg2;
+      UReg arg3;
+      UReg arg4;
+      UReg arg5;
+      UReg arg6;
+      UReg arg7;
+      UReg arg8;
    }
    SyscallArgs;
 
@@ -324,19 +324,19 @@ extern const UInt ML_(syscall_table_size);
 #define RESHI         (getRESHI(status))
 #define ERR           (getERR(status))
 
-static inline UWord getRES ( SyscallStatus* st ) {
+static inline UReg getRES ( SyscallStatus* st ) {
    vg_assert(st->what == SsComplete);
    vg_assert(!sr_isError(st->sres));
    return sr_Res(st->sres);
 }
 
-static inline UWord getRESHI ( SyscallStatus* st ) {
+static inline UReg getRESHI ( SyscallStatus* st ) {
    vg_assert(st->what == SsComplete);
    vg_assert(!sr_isError(st->sres));
    return sr_ResHI(st->sres);
 }
 
-static inline UWord getERR ( SyscallStatus* st ) {
+static inline UReg getERR ( SyscallStatus* st ) {
    vg_assert(st->what == SsComplete);
    vg_assert(sr_isError(st->sres));
    return sr_Err(st->sres);
