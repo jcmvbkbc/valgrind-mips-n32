@@ -73,7 +73,7 @@ static void check_mmap(SysRes res, Addr base, SizeT len)
 {
    if (sr_isError(res)) {
       VG_(printf)("valgrind: mmap(0x%llx, %lld) failed in UME "
-                  "with error %lu (%s).\n", 
+                  "with error %"PRIuREG" (%s).\n", 
                   (ULong)base, (Long)len, 
                   sr_Err(res), VG_(strerror)(sr_Err(res)) );
       if (sr_Err(res) == VKI_EINVAL) {

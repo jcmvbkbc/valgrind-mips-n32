@@ -89,9 +89,21 @@ typedef   signed long           Word;     // 32             64
 #if VEX_HOST_REGISTERSIZE == 4
 typedef UWord                  UReg;
 typedef Word                    Reg;
+#define PRIxREG "lx"
+#define PRIdREG "ld"
+#define PRIuREG "lu"
 #elif VEX_HOST_REGISTERSIZE == 8
 typedef ULong                  UReg;
 typedef Long                    Reg;
+#if VEX_HOST_WORDSIZE == 4
+#define PRIxREG "llx"
+#define PRIdREG "lld"
+#define PRIuREG "llu"
+#elif VEX_HOST_WORDSIZE == 8
+#define PRIxREG "lx"
+#define PRIdREG "ld"
+#define PRIuREG "lu"
+#endif
 #else
 #error Unsupported host register size
 #endif
@@ -273,6 +285,7 @@ static inline Bool sr_EQ ( SysRes sr1, SysRes sr2 ) {
 /* Word size: this is going to be either 4 or 8. */
 // It should probably be in m_machine.
 #define VG_WORDSIZE VEX_HOST_WORDSIZE
+#define VG_REGISTERSIZE VEX_HOST_REGISTERSIZE
 
 /* Endianness */
 #undef VG_BIGENDIAN

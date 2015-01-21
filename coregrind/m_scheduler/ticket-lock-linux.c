@@ -139,7 +139,7 @@ static void acquire_sched_lock(struct sched_lock *p)
                               VKI_FUTEX_WAIT | VKI_FUTEX_PRIVATE_FLAG,
                               futex_value);
       if (sr_isError(sres) && sres._val != VKI_EAGAIN) {
-         VG_(printf)("futex_wait() returned error code %ld\n", sres._val);
+         VG_(printf)("futex_wait() returned error code %"PRIdREG"\n", sres._val);
          vg_assert(False);
       }
    }

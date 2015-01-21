@@ -322,14 +322,14 @@ DECL_TEMPLATE (mips_linux, sys_pipe);
 
 PRE(sys_tee)
 {
-   PRINT("sys_tee ( %ld, %ld, %ld, %ld )", ARG1, ARG2, ARG3, ARG4);
+   PRINT("sys_tee ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1, ARG2, ARG3, ARG4);
    PRE_REG_READ4(long, "sys_tee", int, fdin, int, fdout, vki_size_t, len,
                  int, flags);
 }
 
 PRE(sys_splice)
 {
-   PRINT("sys_splice ( %ld, %ld, %ld, %ld, %ld, %ld )", ARG1, ARG2, ARG3,
+   PRINT("sys_splice ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1, ARG2, ARG3,
                                                         ARG4, ARG5, ARG6);
 
    PRE_REG_READ6(long, "sys_splice", int, fdin, vki_loff_t, sizein, int,
@@ -338,20 +338,20 @@ PRE(sys_splice)
 
 PRE(sys_vmsplice)
 {
-   PRINT("sys_vmsplice ( %ld, %ld, %ld, %ld )", ARG1, ARG2, ARG3, ARG4);
+   PRINT("sys_vmsplice ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1, ARG2, ARG3, ARG4);
    PRE_REG_READ4(long, "sys_vmsplice", int, fdin, struct vki_iovec *, v,
                  vki_size_t, len, int, flags);
 }
 
 PRE(sys_unshare)
 {
-   PRINT("sys_unshare ( %ld )", ARG1);
+   PRINT("sys_unshare ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "sys_unshare", int, flags);
 }
 
 PRE(sys_sched_rr_get_interval)
 {
-   PRINT("sys_sched_rr_get_interval ( %ld, %#lx)", ARG1, ARG2);
+   PRINT("sys_sched_rr_get_interval ( %"PRIdREG", %#"PRIxREG")", ARG1, ARG2);
    PRE_REG_READ2(long, "sched_rr_get_interval", int, flags,
                  struct timespec *, timer);
    *flags |= SfMayBlock;
@@ -359,32 +359,32 @@ PRE(sys_sched_rr_get_interval)
 
 PRE(sys_ustat)
 {
-   PRINT("sys_ustat ( %ld, %#lx)", ARG1, ARG2);
+   PRINT("sys_ustat ( %"PRIdREG", %#"PRIxREG")", ARG1, ARG2);
    PRE_REG_READ2(long, "ustat", int, flags, const void *, path);
 }
 
 PRE(sys_swapon)
 {
-   PRINT("sys_swapon ( %#lx, %ld )", ARG1, ARG2);
+   PRINT("sys_swapon ( %#"PRIxREG", %"PRIdREG" )", ARG1, ARG2);
    PRE_REG_READ2(long, "swapon", const void *, path, int, flags);
 }
 
 PRE(sys_swapoff)
 {
-   PRINT("sys_swapoff ( %#lx )", ARG1);
+   PRINT("sys_swapoff ( %#"PRIxREG" )", ARG1);
    PRE_REG_READ1(long, "swapoff", const void *, path);
 }
 
 PRE(sys_sysfs)
 {
-   PRINT("sys_sysfs ( %ld, %ld, %#lx )", ARG1, ARG2, ARG3);
+   PRINT("sys_sysfs ( %"PRIdREG", %"PRIdREG", %#"PRIxREG" )", ARG1, ARG2, ARG3);
    PRE_REG_READ3(long, "sysfs", int, flags, int, desc, const void *, path);
 }
 
 /* Very much MIPS specific */
 PRE(sys_cacheflush)
 {
-   PRINT("cacheflush (%lx, %lx, %lx)", ARG1, ARG2, ARG3);
+   PRINT("cacheflush (%"PRIxREG", %"PRIxREG", %"PRIxREG")", ARG1, ARG2, ARG3);
    PRE_REG_READ3(long, "cacheflush", unsigned long, addr,
                  int, nbytes, int, cache);
    VG_ (discard_translations) ((Addr64) ARG1, ((ULong) ARG2),
@@ -394,26 +394,26 @@ PRE(sys_cacheflush)
 
 PRE(sys_reboot)
 {
-   PRINT("sys_reboot ( %ld )", ARG1);
+   PRINT("sys_reboot ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(int, "reboot", int, flags);
    *flags |= SfMayBlock;
 }
 
 PRE(sys_setdomainname)
 {
-   PRINT ("sys_setdomainname ( %#lx, %ld )", ARG1, ARG2);
+   PRINT ("sys_setdomainname ( %#"PRIxREG", %"PRIdREG" )", ARG1, ARG2);
    PRE_REG_READ2 (long, "setdomainname", const void *, name, int, len);
 }
 
 PRE(sys_sethostname)
 {
-   PRINT ("sys_sethostname ( %ld, %ld )", ARG1, ARG2);
+   PRINT ("sys_sethostname ( %"PRIdREG", %"PRIdREG" )", ARG1, ARG2);
    PRE_REG_READ2 (long, "sethostname", const void *, name, int, len);
 }
 
 PRE(sys_ptrace)
 {
-   PRINT("sys_ptrace ( %ld, %ld, %#lx, %#lx )", ARG1, ARG2, ARG3, ARG4);
+   PRINT("sys_ptrace ( %"PRIdREG", %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )", ARG1, ARG2, ARG3, ARG4);
    PRE_REG_READ4(int, "ptrace", long, request, long, pid, long, addr,
                  long, data);
    switch (ARG1) {
@@ -464,7 +464,7 @@ POST(sys_ptrace)
 PRE (sys_mmap)
 {
    SysRes r;
-   PRINT("sys_mmap ( %#lx, %llu, %lu, %lu, %lu, %ld )", ARG1, (ULong)ARG2,
+   PRINT("sys_mmap ( %#"PRIxREG", %llu, %"PRIuREG", %"PRIuREG", %"PRIuREG", %"PRIdREG" )", ARG1, (ULong)ARG2,
                                                         ARG3, ARG4, ARG5, ARG6);
    PRE_REG_READ6(long, "mmap", unsigned long, start, vki_size_t, length,
                  int, prot, int, flags, int, fd, unsigned long, offset);
@@ -477,7 +477,7 @@ PRE(sys_clone)
 {
    Bool badarg = False;
    UInt cloneflags;
-   PRINT("sys_clone ( %lx, %#lx, %#lx, %#lx, %#lx )", ARG1, ARG2, ARG3,
+   PRINT("sys_clone ( %"PRIxREG", %#"PRIxREG", %#"PRIxREG", %#"PRIxREG", %#"PRIxREG" )", ARG1, ARG2, ARG3,
                                                       ARG4, ARG5);
    PRE_REG_READ2(int, "clone", unsigned long, flags, void *, child_stack);
    if (ARG1 & VKI_CLONE_PARENT_SETTID) {
@@ -531,7 +531,7 @@ PRE(sys_clone)
 
       default:
          /* should we just ENOSYS? */
-         VG_(message)(Vg_UserMsg, "Unsupported clone() flags: 0x%lx\n", ARG1);
+         VG_(message)(Vg_UserMsg, "Unsupported clone() flags: 0x%"PRIxREG"\n", ARG1);
          VG_(message)(Vg_UserMsg, "\n");
          VG_(message)(Vg_UserMsg, "The only supported clone() uses are:\n");
          VG_(message)(Vg_UserMsg,
@@ -581,14 +581,14 @@ PRE(sys_rt_sigreturn)
 
 PRE(sys_set_thread_area)
 {
-   PRINT("set_thread_area (%lx)", ARG1);
+   PRINT("set_thread_area (%"PRIxREG")", ARG1);
    PRE_REG_READ1(long, "set_thread_area", unsigned long, addr);
    SET_STATUS_from_SysRes(sys_set_tls(tid, ARG1));
 }
 
 PRE(sys_pipe)
 {
-   PRINT("sys_pipe ( %#lx )", ARG1);
+   PRINT("sys_pipe ( %#"PRIxREG" )", ARG1);
    PRE_REG_READ1(int, "pipe", int *, filedes);
    PRE_MEM_WRITE( "pipe(filedes)", ARG1, 2*sizeof(int) );
 }

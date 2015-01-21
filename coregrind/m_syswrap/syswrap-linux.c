@@ -485,7 +485,7 @@ SysRes ML_(do_fork_clone) ( ThreadId tid, UInt flags,
       VG_(do_atfork_parent)(tid);
 
       if (VG_(clo_trace_syscalls))
-	  VG_(printf)("   clone(fork): process %d created child %ld\n",
+	  VG_(printf)("   clone(fork): process %d created child %"PRIdREG"\n",
                       VG_(getpid)(), sr_Res(res));
 
       /* restore signal mask */
@@ -530,7 +530,7 @@ PRE(sys_mount)
    // We are conservative and check everything, except the memory pointed to
    // by 'data'.
    *flags |= SfMayBlock;
-   PRINT("sys_mount( %#lx(%s), %#lx(%s), %#lx(%s), %#lx, %#lx )",
+   PRINT("sys_mount( %#"PRIxREG"(%s), %#"PRIxREG"(%s), %#"PRIxREG"(%s), %#"PRIxREG", %#"PRIxREG" )",
          ARG1,(HChar*)ARG1, ARG2,(HChar*)ARG2, ARG3,(HChar*)ARG3, ARG4, ARG5);
    PRE_REG_READ5(long, "mount",
                  char *, source, char *, target, char *, type,
@@ -543,14 +543,14 @@ PRE(sys_mount)
 
 PRE(sys_oldumount)
 {
-   PRINT("sys_oldumount( %#lx )", ARG1);
+   PRINT("sys_oldumount( %#"PRIxREG" )", ARG1);
    PRE_REG_READ1(long, "umount", char *, path);
    PRE_MEM_RASCIIZ( "umount(path)", ARG1);
 }
 
 PRE(sys_umount)
 {
-   PRINT("sys_umount( %#lx, %ld )", ARG1, ARG2);
+   PRINT("sys_umount( %#"PRIxREG", %"PRIdREG" )", ARG1, ARG2);
    PRE_REG_READ2(long, "umount2", char *, path, int, flags);
    PRE_MEM_RASCIIZ( "umount2(path)", ARG1);
 }
@@ -573,45 +573,45 @@ PRE(sys_pivot_root)
 
 PRE(sys_setfsuid16)
 {
-   PRINT("sys_setfsuid16 ( %ld )", ARG1);
+   PRINT("sys_setfsuid16 ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "setfsuid16", vki_old_uid_t, uid);
 }
 
 PRE(sys_setfsuid)
 {
-   PRINT("sys_setfsuid ( %ld )", ARG1);
+   PRINT("sys_setfsuid ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "setfsuid", vki_uid_t, uid);
 }
 
 PRE(sys_setfsgid16)
 {
-   PRINT("sys_setfsgid16 ( %ld )", ARG1);
+   PRINT("sys_setfsgid16 ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "setfsgid16", vki_old_gid_t, gid);
 }
 
 PRE(sys_setfsgid)
 {
-   PRINT("sys_setfsgid ( %ld )", ARG1);
+   PRINT("sys_setfsgid ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "setfsgid", vki_gid_t, gid);
 }
 
 PRE(sys_setresuid16)
 {
-   PRINT("sys_setresuid16 ( %ld, %ld, %ld )", ARG1, ARG2, ARG3);
+   PRINT("sys_setresuid16 ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1, ARG2, ARG3);
    PRE_REG_READ3(long, "setresuid16",
                  vki_old_uid_t, ruid, vki_old_uid_t, euid, vki_old_uid_t, suid);
 }
 
 PRE(sys_setresuid)
 {
-   PRINT("sys_setresuid ( %ld, %ld, %ld )", ARG1, ARG2, ARG3);
+   PRINT("sys_setresuid ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1, ARG2, ARG3);
    PRE_REG_READ3(long, "setresuid",
                  vki_uid_t, ruid, vki_uid_t, euid, vki_uid_t, suid);
 }
 
 PRE(sys_getresuid16)
 {
-   PRINT("sys_getresuid16 ( %#lx, %#lx, %#lx )", ARG1,ARG2,ARG3);
+   PRINT("sys_getresuid16 ( %#"PRIxREG", %#"PRIxREG", %#"PRIxREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "getresuid16",
                  vki_old_uid_t *, ruid, vki_old_uid_t *, euid,
                  vki_old_uid_t *, suid);
@@ -631,7 +631,7 @@ POST(sys_getresuid16)
 
 PRE(sys_getresuid)
 {
-   PRINT("sys_getresuid ( %#lx, %#lx, %#lx )", ARG1,ARG2,ARG3);
+   PRINT("sys_getresuid ( %#"PRIxREG", %#"PRIxREG", %#"PRIxREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "getresuid", 
                  vki_uid_t *, ruid, vki_uid_t *, euid, vki_uid_t *, suid);
    PRE_MEM_WRITE( "getresuid(ruid)", ARG1, sizeof(vki_uid_t) );
@@ -650,7 +650,7 @@ POST(sys_getresuid)
 
 PRE(sys_setresgid16)
 {
-   PRINT("sys_setresgid16 ( %ld, %ld, %ld )", ARG1, ARG2, ARG3);
+   PRINT("sys_setresgid16 ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1, ARG2, ARG3);
    PRE_REG_READ3(long, "setresgid16",
                  vki_old_gid_t, rgid, 
                  vki_old_gid_t, egid, vki_old_gid_t, sgid);
@@ -658,14 +658,14 @@ PRE(sys_setresgid16)
 
 PRE(sys_setresgid)
 {
-   PRINT("sys_setresgid ( %ld, %ld, %ld )", ARG1, ARG2, ARG3);
+   PRINT("sys_setresgid ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1, ARG2, ARG3);
    PRE_REG_READ3(long, "setresgid",
                  vki_gid_t, rgid, vki_gid_t, egid, vki_gid_t, sgid);
 }
 
 PRE(sys_getresgid16)
 {
-   PRINT("sys_getresgid16 ( %#lx, %#lx, %#lx )", ARG1,ARG2,ARG3);
+   PRINT("sys_getresgid16 ( %#"PRIxREG", %#"PRIxREG", %#"PRIxREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "getresgid16",
                  vki_old_gid_t *, rgid, vki_old_gid_t *, egid,
                  vki_old_gid_t *, sgid);
@@ -685,7 +685,7 @@ POST(sys_getresgid16)
 
 PRE(sys_getresgid)
 {
-   PRINT("sys_getresgid ( %#lx, %#lx, %#lx )", ARG1,ARG2,ARG3);
+   PRINT("sys_getresgid ( %#"PRIxREG", %#"PRIxREG", %#"PRIxREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "getresgid", 
                  vki_gid_t *, rgid, vki_gid_t *, egid, vki_gid_t *, sgid);
    PRE_MEM_WRITE( "getresgid(rgid)", ARG1, sizeof(vki_gid_t) );
@@ -711,7 +711,7 @@ PRE(sys_exit_group)
    ThreadId     t;
    ThreadState* tst;
 
-   PRINT("exit_group( %ld )", ARG1);
+   PRINT("exit_group( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(void, "exit_group", int, status);
 
    tst = VG_(get_ThreadState)(tid);
@@ -778,7 +778,7 @@ PRE(sys_exit_group)
 
 PRE(sys_llseek)
 {
-   PRINT("sys_llseek ( %ld, 0x%lx, 0x%lx, %#lx, %ld )", ARG1,ARG2,ARG3,ARG4,ARG5);
+   PRINT("sys_llseek ( %"PRIdREG", 0x%"PRIxREG", 0x%"PRIxREG", %#"PRIxREG", %"PRIdREG" )", ARG1,ARG2,ARG3,ARG4,ARG5);
    PRE_REG_READ5(long, "llseek",
                  unsigned int, fd, unsigned long, offset_high,
                  unsigned long, offset_low, vki_loff_t *, result,
@@ -798,7 +798,7 @@ POST(sys_llseek)
 PRE(sys_adjtimex)
 {
    struct vki_timex *tx = (struct vki_timex *)ARG1;
-   PRINT("sys_adjtimex ( %#lx )", ARG1);
+   PRINT("sys_adjtimex ( %#"PRIxREG" )", ARG1);
    PRE_REG_READ1(long, "adjtimex", struct timex *, buf);
    PRE_MEM_READ( "adjtimex(timex->modes)", ARG1, sizeof(tx->modes));
 
@@ -832,7 +832,7 @@ POST(sys_adjtimex)
 PRE(sys_clock_adjtime)
 {
    struct vki_timex *tx = (struct vki_timex *)ARG2;
-   PRINT("sys_clock_adjtime ( %ld, %#lx )", ARG1,ARG2);
+   PRINT("sys_clock_adjtime ( %"PRIdREG", %#"PRIxREG" )", ARG1,ARG2);
    PRE_REG_READ2(long, "clock_adjtime", vki_clockid_t, id, struct timex *, buf);
    PRE_MEM_READ( "clock_adjtime(timex->modes)", ARG2, sizeof(tx->modes));
 
@@ -865,7 +865,7 @@ POST(sys_clock_adjtime)
 
 PRE(sys_ioperm)
 {
-   PRINT("sys_ioperm ( %ld, %ld, %ld )", ARG1, ARG2, ARG3 );
+   PRINT("sys_ioperm ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1, ARG2, ARG3 );
    PRE_REG_READ3(long, "ioperm",
                  unsigned long, from, unsigned long, num, int, turn_on);
 }
@@ -873,7 +873,7 @@ PRE(sys_ioperm)
 PRE(sys_syslog)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_syslog (%ld, %#lx, %ld)", ARG1,ARG2,ARG3);
+   PRINT("sys_syslog (%"PRIdREG", %#"PRIxREG", %"PRIdREG")", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "syslog", int, type, char *, bufp, int, len);
    switch (ARG1) {
    // The kernel uses magic numbers here, rather than named constants,
@@ -904,7 +904,7 @@ PRE(sys_vhangup)
 
 PRE(sys_sysinfo)
 {
-   PRINT("sys_sysinfo ( %#lx )",ARG1);
+   PRINT("sys_sysinfo ( %#"PRIxREG" )",ARG1);
    PRE_REG_READ1(long, "sysinfo", struct sysinfo *, info);
    PRE_MEM_WRITE( "sysinfo(info)", ARG1, sizeof(struct vki_sysinfo) );
 }
@@ -922,7 +922,7 @@ PRE(sys_personality)
 PRE(sys_sysctl)
 {
    struct __vki_sysctl_args *args;
-   PRINT("sys_sysctl ( %#lx )", ARG1 );
+   PRINT("sys_sysctl ( %#"PRIxREG" )", ARG1 );
    args = (struct __vki_sysctl_args *)ARG1;
    PRE_REG_READ1(long, "sysctl", struct __sysctl_args *, args);
    PRE_MEM_WRITE( "sysctl(args)", ARG1, sizeof(struct __vki_sysctl_args) );
@@ -953,7 +953,7 @@ POST(sys_sysctl)
 PRE(sys_prctl)
 {
    *flags |= SfMayBlock;
-   PRINT( "sys_prctl ( %ld, %ld, %ld, %ld, %ld )", ARG1, ARG2, ARG3, ARG4, ARG5 );
+   PRINT( "sys_prctl ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1, ARG2, ARG3, ARG4, ARG5 );
    switch (ARG1) {
    case VKI_PR_SET_PDEATHSIG:
       PRE_REG_READ2(int, "prctl", int, option, int, signal);
@@ -1065,7 +1065,7 @@ POST(sys_prctl)
 PRE(sys_sendfile)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_sendfile ( %ld, %ld, %#lx, %lu )", ARG1,ARG2,ARG3,ARG4);
+   PRINT("sys_sendfile ( %"PRIdREG", %"PRIdREG", %#"PRIxREG", %"PRIuREG" )", ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(ssize_t, "sendfile",
                  int, out_fd, int, in_fd, vki_off_t *, offset,
                  vki_size_t, count);
@@ -1082,7 +1082,7 @@ POST(sys_sendfile)
 PRE(sys_sendfile64)
 {
    *flags |= SfMayBlock;
-   PRINT("sendfile64 ( %ld, %ld, %#lx, %lu )",ARG1,ARG2,ARG3,ARG4);
+   PRINT("sendfile64 ( %"PRIdREG", %"PRIdREG", %#"PRIxREG", %"PRIuREG" )",ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(ssize_t, "sendfile64",
                  int, out_fd, int, in_fd, vki_loff_t *, offset,
                  vki_size_t, count);
@@ -1108,7 +1108,7 @@ PRE(sys_futex)
       ARG5 - u32 *uaddr2			REQUEUE,CMP_REQUEUE
       ARG6 - int val3				CMP_REQUEUE
     */
-   PRINT("sys_futex ( %#lx, %ld, %ld, %#lx, %#lx )", ARG1,ARG2,ARG3,ARG4,ARG5);
+   PRINT("sys_futex ( %#"PRIxREG", %"PRIdREG", %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )", ARG1,ARG2,ARG3,ARG4,ARG5);
    switch(ARG2 & ~(VKI_FUTEX_PRIVATE_FLAG|VKI_FUTEX_CLOCK_REALTIME)) {
    case VKI_FUTEX_CMP_REQUEUE:
    case VKI_FUTEX_WAKE_OP:
@@ -1215,7 +1215,7 @@ POST(sys_futex)
 
 PRE(sys_set_robust_list)
 {
-   PRINT("sys_set_robust_list ( %#lx, %ld )", ARG1,ARG2);
+   PRINT("sys_set_robust_list ( %#"PRIxREG", %"PRIdREG" )", ARG1,ARG2);
    PRE_REG_READ2(long, "set_robust_list", 
                  struct vki_robust_list_head *, head, vki_size_t, len);
 
@@ -1228,7 +1228,7 @@ PRE(sys_set_robust_list)
 
 PRE(sys_get_robust_list)
 {
-   PRINT("sys_get_robust_list ( %ld, %#lx, %ld )", ARG1,ARG2,ARG3);
+   PRINT("sys_get_robust_list ( %"PRIdREG", %#"PRIxREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "get_robust_list",
                  int, pid,
                  struct vki_robust_list_head **, head_ptr,
@@ -1247,7 +1247,7 @@ POST(sys_get_robust_list)
 PRE(sys_pselect6)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_pselect6 ( %ld, %#lx, %#lx, %#lx, %#lx, %#lx )", ARG1,ARG2,ARG3,ARG4,ARG5,ARG6);
+   PRINT("sys_pselect6 ( %"PRIdREG", %#"PRIxREG", %#"PRIxREG", %#"PRIxREG", %#"PRIxREG", %#"PRIxREG" )", ARG1,ARG2,ARG3,ARG4,ARG5,ARG6);
    PRE_REG_READ6(long, "pselect6",
                  int, n, vki_fd_set *, readfds, vki_fd_set *, writefds,
                  vki_fd_set *, exceptfds, struct vki_timeval *, timeout,
@@ -1273,7 +1273,7 @@ PRE(sys_ppoll)
    UInt i;
    struct vki_pollfd* ufds = (struct vki_pollfd *)ARG1;
    *flags |= SfMayBlock;
-   PRINT("sys_ppoll ( %#lx, %ld, %#lx, %#lx, %llu )\n", ARG1,ARG2,ARG3,ARG4,(ULong)ARG5);
+   PRINT("sys_ppoll ( %#"PRIxREG", %"PRIdREG", %#"PRIxREG", %#"PRIxREG", %llu )\n", ARG1,ARG2,ARG3,ARG4,(ULong)ARG5);
    PRE_REG_READ5(long, "ppoll",
                  struct vki_pollfd *, ufds, unsigned int, nfds,
                  struct vki_timespec *, tsp, vki_sigset_t *, sigmask,
@@ -1311,7 +1311,7 @@ POST(sys_ppoll)
 
 PRE(sys_epoll_create)
 {
-   PRINT("sys_epoll_create ( %ld )", ARG1);
+   PRINT("sys_epoll_create ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "epoll_create", int, size);
 }
 POST(sys_epoll_create)
@@ -1328,7 +1328,7 @@ POST(sys_epoll_create)
 
 PRE(sys_epoll_create1)
 {
-   PRINT("sys_epoll_create1 ( %ld )", ARG1);
+   PRINT("sys_epoll_create1 ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "epoll_create1", int, flags);
 }
 POST(sys_epoll_create1)
@@ -1350,7 +1350,7 @@ PRE(sys_epoll_ctl)
       "EPOLL_CTL_DEL",
       "EPOLL_CTL_MOD"
    };
-   PRINT("sys_epoll_ctl ( %ld, %s, %ld, %#lx )",
+   PRINT("sys_epoll_ctl ( %"PRIdREG", %s, %"PRIdREG", %#"PRIxREG" )",
          ARG1, ( ARG2<3 ? epoll_ctl_s[ARG2] : "?" ), ARG3, ARG4);
    PRE_REG_READ4(long, "epoll_ctl",
                  int, epfd, int, op, int, fd, struct vki_epoll_event *, event);
@@ -1361,7 +1361,7 @@ PRE(sys_epoll_ctl)
 PRE(sys_epoll_wait)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_epoll_wait ( %ld, %#lx, %ld, %ld )", ARG1, ARG2, ARG3, ARG4);
+   PRINT("sys_epoll_wait ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIdREG" )", ARG1, ARG2, ARG3, ARG4);
    PRE_REG_READ4(long, "epoll_wait",
                  int, epfd, struct vki_epoll_event *, events,
                  int, maxevents, int, timeout);
@@ -1377,7 +1377,7 @@ POST(sys_epoll_wait)
 PRE(sys_epoll_pwait)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_epoll_pwait ( %ld, %#lx, %ld, %ld, %#lx, %llu )", ARG1,ARG2,ARG3,ARG4,ARG5,(ULong)ARG6);
+   PRINT("sys_epoll_pwait ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIdREG", %#"PRIxREG", %llu )", ARG1,ARG2,ARG3,ARG4,ARG5,(ULong)ARG6);
    PRE_REG_READ6(long, "epoll_pwait",
                  int, epfd, struct vki_epoll_event *, events,
                  int, maxevents, int, timeout, vki_sigset_t *, sigmask,
@@ -1395,7 +1395,7 @@ POST(sys_epoll_pwait)
 
 PRE(sys_eventfd)
 {
-   PRINT("sys_eventfd ( %lu )", ARG1);
+   PRINT("sys_eventfd ( %"PRIuREG" )", ARG1);
    PRE_REG_READ1(long, "sys_eventfd", unsigned int, count);
 }
 POST(sys_eventfd)
@@ -1411,7 +1411,7 @@ POST(sys_eventfd)
 
 PRE(sys_eventfd2)
 {
-   PRINT("sys_eventfd2 ( %lu, %ld )", ARG1,ARG2);
+   PRINT("sys_eventfd2 ( %"PRIuREG", %"PRIdREG" )", ARG1,ARG2);
    PRE_REG_READ2(long, "sys_eventfd2", unsigned int, count, int, flags);
 }
 POST(sys_eventfd2)
@@ -1428,15 +1428,15 @@ POST(sys_eventfd2)
 PRE(sys_fallocate)
 {
    *flags |= SfMayBlock;
-#if VG_WORDSIZE == 4
-   PRINT("sys_fallocate ( %ld, %ld, %lld, %lld )",
+#if VG_REGISTERSIZE == 4
+   PRINT("sys_fallocate ( %"PRIdREG", %"PRIdREG", %lld, %lld )",
          ARG1, ARG2, MERGE64(ARG3,ARG4), MERGE64(ARG5,ARG6));
    PRE_REG_READ6(long, "fallocate",
                  int, fd, int, mode,
                  unsigned, MERGE64_FIRST(offset), unsigned, MERGE64_SECOND(offset),
                  unsigned, MERGE64_FIRST(len), unsigned, MERGE64_SECOND(len));
-#elif VG_WORDSIZE == 8
-   PRINT("sys_fallocate ( %ld, %ld, %lld, %lld )",
+#elif VG_REGISTERSIZE == 8
+   PRINT("sys_fallocate ( %"PRIdREG", %"PRIdREG", %lld, %lld )",
          ARG1, ARG2, (Long)ARG3, (Long)ARG4);
    PRE_REG_READ4(long, "fallocate",
                  int, fd, int, mode, vki_loff_t, offset, vki_loff_t, len);
@@ -1449,7 +1449,7 @@ PRE(sys_fallocate)
 
 PRE(sys_prlimit64)
 {
-   PRINT("sys_prlimit64 ( %ld, %ld, %#lx, %#lx )", ARG1,ARG2,ARG3,ARG4);
+   PRINT("sys_prlimit64 ( %"PRIdREG", %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )", ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(long, "prlimit64",
                  vki_pid_t, pid, unsigned int, resource,
                  const struct rlimit64 *, new_rlim,
@@ -1540,13 +1540,13 @@ PRE(sys_gettid)
 
 PRE(sys_set_tid_address)
 {
-   PRINT("sys_set_tid_address ( %#lx )", ARG1);
+   PRINT("sys_set_tid_address ( %#"PRIxREG" )", ARG1);
    PRE_REG_READ1(long, "set_tid_address", int *, tidptr);
 }
 
 PRE(sys_tkill)
 {
-   PRINT("sys_tgkill ( %ld, %ld )", ARG1,ARG2);
+   PRINT("sys_tgkill ( %"PRIdREG", %"PRIdREG" )", ARG1,ARG2);
    PRE_REG_READ2(long, "tkill", int, tid, int, sig);
    if (!ML_(client_signal_OK)(ARG2)) {
       SET_STATUS_Failure( VKI_EINVAL );
@@ -1557,7 +1557,7 @@ PRE(sys_tkill)
    *flags |= SfPollAfter;
 
    if (VG_(clo_trace_signals))
-      VG_(message)(Vg_DebugMsg, "tkill: sending signal %ld to pid %ld\n",
+      VG_(message)(Vg_DebugMsg, "tkill: sending signal %"PRIdREG" to pid %"PRIdREG"\n",
 		   ARG2, ARG1);
 
    /* If we're sending SIGKILL, check to see if the target is one of
@@ -1581,13 +1581,13 @@ PRE(sys_tkill)
 POST(sys_tkill)
 {
    if (VG_(clo_trace_signals))
-      VG_(message)(Vg_DebugMsg, "tkill: sent signal %ld to pid %ld\n",
+      VG_(message)(Vg_DebugMsg, "tkill: sent signal %"PRIdREG" to pid %"PRIdREG"\n",
                    ARG2, ARG1);
 }
 
 PRE(sys_tgkill)
 {
-   PRINT("sys_tgkill ( %ld, %ld, %ld )", ARG1,ARG2,ARG3);
+   PRINT("sys_tgkill ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "tgkill", int, tgid, int, tid, int, sig);
    if (!ML_(client_signal_OK)(ARG3)) {
       SET_STATUS_Failure( VKI_EINVAL );
@@ -1599,7 +1599,7 @@ PRE(sys_tgkill)
 
    if (VG_(clo_trace_signals))
       VG_(message)(Vg_DebugMsg,
-                   "tgkill: sending signal %ld to pid %ld/%ld\n",
+                   "tgkill: sending signal %"PRIdREG" to pid %"PRIdREG"/%"PRIdREG"\n",
 		   ARG3, ARG1, ARG2);
 
    /* If we're sending SIGKILL, check to see if the target is one of
@@ -1624,7 +1624,7 @@ POST(sys_tgkill)
 {
    if (VG_(clo_trace_signals))
       VG_(message)(Vg_DebugMsg,
-                   "tgkill: sent signal %ld to pid %ld/%ld\n",
+                   "tgkill: sent signal %"PRIdREG" to pid %"PRIdREG"/%"PRIdREG"\n",
                    ARG3, ARG1, ARG2);
 }
 
@@ -1634,7 +1634,7 @@ POST(sys_tgkill)
 
 PRE(sys_fadvise64)
 {
-   PRINT("sys_fadvise64 ( %ld, %lld, %lu, %ld )",
+   PRINT("sys_fadvise64 ( %"PRIdREG", %lld, %"PRIuREG", %"PRIdREG" )",
          ARG1, MERGE64(ARG2,ARG3), ARG4, ARG5);
    PRE_REG_READ5(long, "fadvise64",
                  int, fd, vki_u32, MERGE64_FIRST(offset), vki_u32, MERGE64_SECOND(offset),
@@ -1643,7 +1643,7 @@ PRE(sys_fadvise64)
 
 PRE(sys_fadvise64_64)
 {
-   PRINT("sys_fadvise64_64 ( %ld, %lld, %lld, %ld )",
+   PRINT("sys_fadvise64_64 ( %"PRIdREG", %lld, %lld, %"PRIdREG" )",
          ARG1, MERGE64(ARG2,ARG3), MERGE64(ARG4,ARG5), ARG6);
    PRE_REG_READ6(long, "fadvise64_64",
                  int, fd, vki_u32, MERGE64_FIRST(offset), vki_u32, MERGE64_SECOND(offset),
@@ -1660,7 +1660,7 @@ PRE(sys_fadvise64_64)
 
 PRE(sys_io_setup)
 {
-   PRINT("sys_io_setup ( %lu, %#lx )", ARG1,ARG2);
+   PRINT("sys_io_setup ( %"PRIuREG", %#"PRIxREG" )", ARG1,ARG2);
    PRE_REG_READ2(long, "io_setup",
                  unsigned, nr_events, vki_aio_context_t *, ctxp);
    PRE_MEM_WRITE( "io_setup(ctxp)", ARG2, sizeof(vki_aio_context_t) );
@@ -1720,7 +1720,7 @@ PRE(sys_io_destroy)
 PRE(sys_io_getevents)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_io_getevents ( %llu, %lld, %lld, %#lx, %#lx )",
+   PRINT("sys_io_getevents ( %llu, %lld, %lld, %#"PRIxREG", %#"PRIxREG" )",
          (ULong)ARG1,(Long)ARG2,(Long)ARG3,ARG4,ARG5);
    PRE_REG_READ5(long, "io_getevents",
                  vki_aio_context_t, ctx_id, long, min_nr, long, nr,
@@ -1791,7 +1791,7 @@ PRE(sys_io_submit)
 {
    Int i, j;
 
-   PRINT("sys_io_submit ( %llu, %ld, %#lx )", (ULong)ARG1,ARG2,ARG3);
+   PRINT("sys_io_submit ( %llu, %"PRIdREG", %#"PRIxREG" )", (ULong)ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "io_submit",
                  vki_aio_context_t, ctx_id, long, nr,
                  struct iocb **, iocbpp);
@@ -1842,7 +1842,7 @@ PRE(sys_io_submit)
 
 PRE(sys_io_cancel)
 {
-   PRINT("sys_io_cancel ( %llu, %#lx, %#lx )", (ULong)ARG1,ARG2,ARG3);
+   PRINT("sys_io_cancel ( %llu, %#"PRIxREG", %#"PRIxREG" )", (ULong)ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "io_cancel",
                  vki_aio_context_t, ctx_id, struct iocb *, iocb,
                  struct io_event *, result);
@@ -1860,7 +1860,7 @@ POST(sys_io_cancel)
 
 PRE(sys_mbind)
 {
-   PRINT("sys_mbind ( %#lx, %lu, %ld, %#lx, %lu, %lu )", ARG1,ARG2,ARG3,ARG4,ARG5,ARG6);
+   PRINT("sys_mbind ( %#"PRIxREG", %"PRIuREG", %"PRIdREG", %#"PRIxREG", %"PRIuREG", %"PRIuREG" )", ARG1,ARG2,ARG3,ARG4,ARG5,ARG6);
    PRE_REG_READ6(long, "mbind",
                  unsigned long, start, unsigned long, len,
                  unsigned long, policy, unsigned long *, nodemask,
@@ -1872,7 +1872,7 @@ PRE(sys_mbind)
 
 PRE(sys_set_mempolicy)
 {
-   PRINT("sys_set_mempolicy ( %ld, %#lx, %ld )", ARG1,ARG2,ARG3);
+   PRINT("sys_set_mempolicy ( %"PRIdREG", %#"PRIxREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "set_mempolicy",
                  int, policy, unsigned long *, nodemask,
                  unsigned long, maxnode);
@@ -1882,7 +1882,7 @@ PRE(sys_set_mempolicy)
 
 PRE(sys_get_mempolicy)
 {
-   PRINT("sys_get_mempolicy ( %#lx, %#lx, %ld, %#lx, %lx )", ARG1,ARG2,ARG3,ARG4,ARG5);
+   PRINT("sys_get_mempolicy ( %#"PRIxREG", %#"PRIxREG", %"PRIdREG", %#"PRIxREG", %"PRIxREG" )", ARG1,ARG2,ARG3,ARG4,ARG5);
    PRE_REG_READ5(long, "get_mempolicy",
                  int *, policy, unsigned long *, nodemask,
                  unsigned long, maxnode, unsigned long, addr,
@@ -1907,7 +1907,7 @@ POST(sys_get_mempolicy)
 
 PRE(sys_fanotify_init)
 {
-   PRINT("sys_fanotify_init ( %lu, %lu )", ARG1,ARG2);
+   PRINT("sys_fanotify_init ( %"PRIuREG", %"PRIuREG" )", ARG1,ARG2);
    PRE_REG_READ2(long, "fanotify_init",
                  unsigned int, flags, unsigned int, event_f_flags);
 }
@@ -1926,8 +1926,8 @@ POST(sys_fanotify_init)
 
 PRE(sys_fanotify_mark)
 {
-#if VG_WORDSIZE == 4
-   PRINT( "sys_fanotify_mark ( %ld, %lu, %llu, %ld, %#lx(%s))", 
+#if VG_REGISTERSIZE == 4
+   PRINT( "sys_fanotify_mark ( %"PRIdREG", %"PRIuREG", %llu, %"PRIdREG", %#"PRIxREG"(%s))", 
           ARG1,ARG2,MERGE64(ARG3,ARG4),ARG5,ARG6,(char *)ARG6);
    PRE_REG_READ6(long, "sys_fanotify_mark", 
                  int, fanotify_fd, unsigned int, flags,
@@ -1935,8 +1935,8 @@ PRE(sys_fanotify_mark)
                  int, dfd, const char *, pathname);
    if (ARG6)
       PRE_MEM_RASCIIZ( "fanotify_mark(path)", ARG6);
-#elif VG_WORDSIZE == 8
-   PRINT( "sys_fanotify_mark ( %ld, %lu, %llu, %ld, %#lx(%s))", 
+#elif VG_REGISTERSIZE == 8
+   PRINT( "sys_fanotify_mark ( %"PRIdREG", %"PRIuREG", %llu, %"PRIdREG", %#"PRIxREG"(%s))", 
            ARG1,ARG2,(ULong)ARG3,ARG4,ARG5,(char *)ARG5);
    PRE_REG_READ5(long, "sys_fanotify_mark", 
                  int, fanotify_fd, unsigned int, flags,
@@ -1972,7 +1972,7 @@ POST(sys_inotify_init)
 
 PRE(sys_inotify_init1)
 {
-   PRINT("sys_inotify_init ( %ld )", ARG1);
+   PRINT("sys_inotify_init ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "inotify_init", int, flag);
 }
 
@@ -1990,14 +1990,14 @@ POST(sys_inotify_init1)
 
 PRE(sys_inotify_add_watch)
 {
-   PRINT( "sys_inotify_add_watch ( %ld, %#lx, %lx )", ARG1,ARG2,ARG3);
+   PRINT( "sys_inotify_add_watch ( %"PRIdREG", %#"PRIxREG", %"PRIxREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "inotify_add_watch", int, fd, char *, path, int, mask);
    PRE_MEM_RASCIIZ( "inotify_add_watch(path)", ARG2 );
 }
 
 PRE(sys_inotify_rm_watch)
 {
-   PRINT( "sys_inotify_rm_watch ( %ld, %lx )", ARG1,ARG2);
+   PRINT( "sys_inotify_rm_watch ( %"PRIdREG", %"PRIxREG" )", ARG1,ARG2);
    PRE_REG_READ2(long, "inotify_rm_watch", int, fd, int, wd);
 }
 
@@ -2007,7 +2007,7 @@ PRE(sys_inotify_rm_watch)
 
 PRE(sys_mq_open)
 {
-   PRINT("sys_mq_open( %#lx(%s), %ld, %lld, %#lx )",
+   PRINT("sys_mq_open( %#"PRIxREG"(%s), %"PRIdREG", %lld, %#"PRIxREG" )",
          ARG1,(char*)ARG1,ARG2,(ULong)ARG3,ARG4);
    PRE_REG_READ4(long, "mq_open",
                  const char *, name, int, oflag, vki_mode_t, mode,
@@ -2035,7 +2035,7 @@ POST(sys_mq_open)
 
 PRE(sys_mq_unlink)
 {
-   PRINT("sys_mq_unlink ( %#lx(%s) )", ARG1,(char*)ARG1);
+   PRINT("sys_mq_unlink ( %#"PRIxREG"(%s) )", ARG1,(char*)ARG1);
    PRE_REG_READ1(long, "mq_unlink", const char *, name);
    PRE_MEM_RASCIIZ( "mq_unlink(name)", ARG1 );
 }
@@ -2043,7 +2043,7 @@ PRE(sys_mq_unlink)
 PRE(sys_mq_timedsend)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_mq_timedsend ( %ld, %#lx, %llu, %ld, %#lx )",
+   PRINT("sys_mq_timedsend ( %"PRIdREG", %#"PRIxREG", %llu, %"PRIdREG", %#"PRIxREG" )",
          ARG1,ARG2,(ULong)ARG3,ARG4,ARG5);
    PRE_REG_READ5(long, "mq_timedsend",
                  vki_mqd_t, mqdes, const char *, msg_ptr, vki_size_t, msg_len,
@@ -2061,7 +2061,7 @@ PRE(sys_mq_timedsend)
 PRE(sys_mq_timedreceive)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_mq_timedreceive( %ld, %#lx, %llu, %#lx, %#lx )",
+   PRINT("sys_mq_timedreceive( %"PRIdREG", %#"PRIxREG", %llu, %#"PRIxREG", %#"PRIxREG" )",
          ARG1,ARG2,(ULong)ARG3,ARG4,ARG5);
    PRE_REG_READ5(ssize_t, "mq_timedreceive",
                  vki_mqd_t, mqdes, char *, msg_ptr, vki_size_t, msg_len,
@@ -2088,7 +2088,7 @@ POST(sys_mq_timedreceive)
 
 PRE(sys_mq_notify)
 {
-   PRINT("sys_mq_notify( %ld, %#lx )", ARG1,ARG2 );
+   PRINT("sys_mq_notify( %"PRIdREG", %#"PRIxREG" )", ARG1,ARG2 );
    PRE_REG_READ2(long, "mq_notify",
                  vki_mqd_t, mqdes, const struct sigevent *, notification);
    if (!ML_(fd_allowed)(ARG1, "mq_notify", tid, False))
@@ -2100,7 +2100,7 @@ PRE(sys_mq_notify)
 
 PRE(sys_mq_getsetattr)
 {
-   PRINT("sys_mq_getsetattr( %ld, %#lx, %#lx )", ARG1,ARG2,ARG3 );
+   PRINT("sys_mq_getsetattr( %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )", ARG1,ARG2,ARG3 );
    PRE_REG_READ3(long, "mq_getsetattr",
                  vki_mqd_t, mqdes, const struct mq_attr *, mqstat,
                  struct mq_attr *, omqstat);
@@ -2129,7 +2129,7 @@ POST(sys_mq_getsetattr)
 
 PRE(sys_clock_settime)
 {
-   PRINT("sys_clock_settime( %ld, %#lx )", ARG1,ARG2);
+   PRINT("sys_clock_settime( %"PRIdREG", %#"PRIxREG" )", ARG1,ARG2);
    PRE_REG_READ2(long, "clock_settime", 
                  vki_clockid_t, clk_id, const struct timespec *, tp);
    PRE_MEM_READ( "clock_settime(tp)", ARG2, sizeof(struct vki_timespec) );
@@ -2137,7 +2137,7 @@ PRE(sys_clock_settime)
 
 PRE(sys_clock_gettime)
 {
-   PRINT("sys_clock_gettime( %ld, %#lx )" , ARG1,ARG2);
+   PRINT("sys_clock_gettime( %"PRIdREG", %#"PRIxREG" )" , ARG1,ARG2);
    PRE_REG_READ2(long, "clock_gettime", 
                  vki_clockid_t, clk_id, struct timespec *, tp);
    PRE_MEM_WRITE( "clock_gettime(tp)", ARG2, sizeof(struct vki_timespec) );
@@ -2149,7 +2149,7 @@ POST(sys_clock_gettime)
 
 PRE(sys_clock_getres)
 {
-   PRINT("sys_clock_getres( %ld, %#lx )" , ARG1,ARG2);
+   PRINT("sys_clock_getres( %"PRIdREG", %#"PRIxREG" )" , ARG1,ARG2);
    // Nb: we can't use "RES" as the param name because that's a macro
    // defined above!
    PRE_REG_READ2(long, "clock_getres", 
@@ -2166,7 +2166,7 @@ POST(sys_clock_getres)
 PRE(sys_clock_nanosleep)
 {
    *flags |= SfMayBlock|SfPostOnFail;
-   PRINT("sys_clock_nanosleep( %ld, %ld, %#lx, %#lx )", ARG1,ARG2,ARG3,ARG4);
+   PRINT("sys_clock_nanosleep( %"PRIdREG", %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )", ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(int32_t, "clock_nanosleep",
                  vki_clockid_t, clkid, int, flags,
                  const struct timespec *, rqtp, struct timespec *, rmtp);
@@ -2186,7 +2186,7 @@ POST(sys_clock_nanosleep)
 
 PRE(sys_timer_create)
 {
-   PRINT("sys_timer_create( %ld, %#lx, %#lx )", ARG1,ARG2,ARG3);
+   PRINT("sys_timer_create( %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "timer_create",
                  vki_clockid_t, clockid, struct sigevent *, evp,
                  vki_timer_t *, timerid);
@@ -2212,7 +2212,7 @@ POST(sys_timer_create)
 
 PRE(sys_timer_settime)
 {
-   PRINT("sys_timer_settime( %lld, %ld, %#lx, %#lx )", (ULong)ARG1,ARG2,ARG3,ARG4);
+   PRINT("sys_timer_settime( %lld, %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )", (ULong)ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(long, "timer_settime", 
                  vki_timer_t, timerid, int, flags,
                  const struct itimerspec *, value,
@@ -2231,7 +2231,7 @@ POST(sys_timer_settime)
 
 PRE(sys_timer_gettime)
 {
-   PRINT("sys_timer_gettime( %lld, %#lx )", (ULong)ARG1,ARG2);
+   PRINT("sys_timer_gettime( %lld, %#"PRIxREG" )", (ULong)ARG1,ARG2);
    PRE_REG_READ2(long, "timer_gettime", 
                  vki_timer_t, timerid, struct itimerspec *, value);
    PRE_MEM_WRITE( "timer_gettime(value)", ARG2,
@@ -2244,13 +2244,13 @@ POST(sys_timer_gettime)
 
 PRE(sys_timer_getoverrun)
 {
-   PRINT("sys_timer_getoverrun( %#lx )", ARG1);
+   PRINT("sys_timer_getoverrun( %#"PRIxREG" )", ARG1);
    PRE_REG_READ1(long, "timer_getoverrun", vki_timer_t, timerid);
 }
 
 PRE(sys_timer_delete)
 {
-   PRINT("sys_timer_delete( %#lx )", ARG1);
+   PRINT("sys_timer_delete( %#"PRIxREG" )", ARG1);
    PRE_REG_READ1(long, "timer_delete", vki_timer_t, timerid);
 }
 
@@ -2290,7 +2290,7 @@ PRE(sys_timerfd_create)
 {
    if (linux_kernel_2_6_22()) {
       /* 2.6.22 kernel: timerfd system call. */
-      PRINT("sys_timerfd ( %ld, %ld, %#lx )", ARG1, ARG2, ARG3);
+      PRINT("sys_timerfd ( %"PRIdREG", %"PRIdREG", %#"PRIxREG" )", ARG1, ARG2, ARG3);
       PRE_REG_READ3(long, "sys_timerfd",
                     int, fd, int, clockid, const struct itimerspec *, tmr);
       PRE_MEM_READ("timerfd(tmr)", ARG3,
@@ -2299,7 +2299,7 @@ PRE(sys_timerfd_create)
          SET_STATUS_Failure( VKI_EBADF );
    } else {
       /* 2.6.24 and later kernels: timerfd_create system call. */
-      PRINT("sys_timerfd_create (%ld, %ld )", ARG1, ARG2);
+      PRINT("sys_timerfd_create (%"PRIdREG", %"PRIdREG" )", ARG1, ARG2);
       PRE_REG_READ2(long, "timerfd_create", int, clockid, int, flags);
    }
 }
@@ -2331,7 +2331,7 @@ POST(sys_timerfd_create)
 
 PRE(sys_timerfd_gettime)
 {
-   PRINT("sys_timerfd_gettime ( %ld, %#lx )", ARG1, ARG2);
+   PRINT("sys_timerfd_gettime ( %"PRIdREG", %#"PRIxREG" )", ARG1, ARG2);
    PRE_REG_READ2(long, "timerfd_gettime",
                  int, ufd,
                  struct vki_itimerspec*, otmr);
@@ -2349,7 +2349,7 @@ POST(sys_timerfd_gettime)
 
 PRE(sys_timerfd_settime)
 {
-   PRINT("sys_timerfd_settime ( %ld, %ld, %#lx, %#lx )", ARG1, ARG2, ARG3, ARG4);
+   PRINT("sys_timerfd_settime ( %"PRIdREG", %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )", ARG1, ARG2, ARG3, ARG4);
    PRE_REG_READ4(long, "timerfd_settime",
                  int, ufd,
                  int, flags,
@@ -2380,7 +2380,7 @@ POST(sys_timerfd_settime)
 
 PRE(sys_capget)
 {
-   PRINT("sys_capget ( %#lx, %#lx )", ARG1, ARG2 );
+   PRINT("sys_capget ( %#"PRIxREG", %#"PRIxREG" )", ARG1, ARG2 );
    PRE_REG_READ2(long, "capget", 
                  vki_cap_user_header_t, header, vki_cap_user_data_t, data);
    PRE_MEM_READ( "capget(header)", ARG1, 
@@ -2397,7 +2397,7 @@ POST(sys_capget)
 
 PRE(sys_capset)
 {
-   PRINT("sys_capset ( %#lx, %#lx )", ARG1, ARG2 );
+   PRINT("sys_capset ( %#"PRIxREG", %#"PRIxREG" )", ARG1, ARG2 );
    PRE_REG_READ2(long, "capset", 
                  vki_cap_user_header_t, header,
                  const vki_cap_user_data_t, data);
@@ -2419,7 +2419,7 @@ PRE(sys_getuid16)
 
 PRE(sys_setuid16)
 {
-   PRINT("sys_setuid16 ( %ld )", ARG1);
+   PRINT("sys_setuid16 ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "setuid16", vki_old_uid_t, uid);
 }
 
@@ -2431,7 +2431,7 @@ PRE(sys_getgid16)
 
 PRE(sys_setgid16)
 {
-   PRINT("sys_setgid16 ( %ld )", ARG1);
+   PRINT("sys_setgid16 ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "setgid16", vki_old_gid_t, gid);
 }
 
@@ -2449,19 +2449,19 @@ PRE(sys_getegid16)
 
 PRE(sys_setreuid16)
 {
-   PRINT("setreuid16 ( 0x%lx, 0x%lx )", ARG1, ARG2);
+   PRINT("setreuid16 ( 0x%"PRIxREG", 0x%"PRIxREG" )", ARG1, ARG2);
    PRE_REG_READ2(long, "setreuid16", vki_old_uid_t, ruid, vki_old_uid_t, euid);
 }
 
 PRE(sys_setregid16)
 {
-   PRINT("sys_setregid16 ( %ld, %ld )", ARG1, ARG2);
+   PRINT("sys_setregid16 ( %"PRIdREG", %"PRIdREG" )", ARG1, ARG2);
    PRE_REG_READ2(long, "setregid16", vki_old_gid_t, rgid, vki_old_gid_t, egid);
 }
 
 PRE(sys_getgroups16)
 {
-   PRINT("sys_getgroups16 ( %ld, %#lx )", ARG1, ARG2);
+   PRINT("sys_getgroups16 ( %"PRIdREG", %#"PRIxREG" )", ARG1, ARG2);
    PRE_REG_READ2(long, "getgroups16", int, size, vki_old_gid_t *, list);
    if (ARG1 > 0)
       PRE_MEM_WRITE( "getgroups16(list)", ARG2, ARG1 * sizeof(vki_old_gid_t) );
@@ -2475,7 +2475,7 @@ POST(sys_getgroups16)
 
 PRE(sys_setgroups16)
 {
-   PRINT("sys_setgroups16 ( %llu, %#lx )", (ULong)ARG1, ARG2);
+   PRINT("sys_setgroups16 ( %llu, %#"PRIxREG" )", (ULong)ARG1, ARG2);
    PRE_REG_READ2(long, "setgroups16", int, size, vki_old_gid_t *, list);
    if (ARG1 > 0)
       PRE_MEM_READ( "setgroups16(list)", ARG2, ARG1 * sizeof(vki_old_gid_t) );
@@ -2487,7 +2487,7 @@ PRE(sys_setgroups16)
 
 PRE(sys_chown16)
 {
-   PRINT("sys_chown16 ( %#lx, 0x%lx, 0x%lx )", ARG1,ARG2,ARG3);
+   PRINT("sys_chown16 ( %#"PRIxREG", 0x%"PRIxREG", 0x%"PRIxREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "chown16",
                  const char *, path,
                  vki_old_uid_t, owner, vki_old_gid_t, group);
@@ -2496,7 +2496,7 @@ PRE(sys_chown16)
 
 PRE(sys_fchown16)
 {
-   PRINT("sys_fchown16 ( %ld, %ld, %ld )", ARG1,ARG2,ARG3);
+   PRINT("sys_fchown16 ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "fchown16",
                  unsigned int, fd, vki_old_uid_t, owner, vki_old_gid_t, group);
 }
@@ -2508,7 +2508,7 @@ PRE(sys_fchown16)
 PRE(sys_setxattr)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_setxattr ( %#lx, %#lx, %#lx, %llu, %ld )",
+   PRINT("sys_setxattr ( %#"PRIxREG", %#"PRIxREG", %#"PRIxREG", %llu, %"PRIdREG" )",
          ARG1, ARG2, ARG3, (ULong)ARG4, ARG5);
    PRE_REG_READ5(long, "setxattr",
                  char *, path, char *, name,
@@ -2521,7 +2521,7 @@ PRE(sys_setxattr)
 PRE(sys_lsetxattr)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_lsetxattr ( %#lx, %#lx, %#lx, %llu, %ld )",
+   PRINT("sys_lsetxattr ( %#"PRIxREG", %#"PRIxREG", %#"PRIxREG", %llu, %"PRIdREG" )",
          ARG1, ARG2, ARG3, (ULong)ARG4, ARG5);
    PRE_REG_READ5(long, "lsetxattr",
                  char *, path, char *, name,
@@ -2534,7 +2534,7 @@ PRE(sys_lsetxattr)
 PRE(sys_fsetxattr)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_fsetxattr ( %ld, %#lx, %#lx, %llu, %ld )",
+   PRINT("sys_fsetxattr ( %"PRIdREG", %#"PRIxREG", %#"PRIxREG", %llu, %"PRIdREG" )",
          ARG1, ARG2, ARG3, (ULong)ARG4, ARG5);
    PRE_REG_READ5(long, "fsetxattr",
                  int, fd, char *, name, void *, value,
@@ -2546,7 +2546,7 @@ PRE(sys_fsetxattr)
 PRE(sys_getxattr)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_getxattr ( %#lx, %#lx, %#lx, %llu )", ARG1,ARG2,ARG3, (ULong)ARG4);
+   PRINT("sys_getxattr ( %#"PRIxREG", %#"PRIxREG", %#"PRIxREG", %llu )", ARG1,ARG2,ARG3, (ULong)ARG4);
    PRE_REG_READ4(ssize_t, "getxattr",
                  char *, path, char *, name, void *, value, vki_size_t, size);
    PRE_MEM_RASCIIZ( "getxattr(path)", ARG1 );
@@ -2564,7 +2564,7 @@ POST(sys_getxattr)
 PRE(sys_lgetxattr)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_lgetxattr ( %#lx, %#lx, %#lx, %llu )", ARG1,ARG2,ARG3, (ULong)ARG4);
+   PRINT("sys_lgetxattr ( %#"PRIxREG", %#"PRIxREG", %#"PRIxREG", %llu )", ARG1,ARG2,ARG3, (ULong)ARG4);
    PRE_REG_READ4(ssize_t, "lgetxattr",
                  char *, path, char *, name, void *, value, vki_size_t, size);
    PRE_MEM_RASCIIZ( "lgetxattr(path)", ARG1 );
@@ -2582,7 +2582,7 @@ POST(sys_lgetxattr)
 PRE(sys_fgetxattr)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_fgetxattr ( %ld, %#lx, %#lx, %llu )", ARG1, ARG2, ARG3, (ULong)ARG4);
+   PRINT("sys_fgetxattr ( %"PRIdREG", %#"PRIxREG", %#"PRIxREG", %llu )", ARG1, ARG2, ARG3, (ULong)ARG4);
    PRE_REG_READ4(ssize_t, "fgetxattr",
                  int, fd, char *, name, void *, value, vki_size_t, size);
    PRE_MEM_RASCIIZ( "fgetxattr(name)", ARG2 );
@@ -2597,7 +2597,7 @@ POST(sys_fgetxattr)
 PRE(sys_listxattr)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_listxattr ( %#lx, %#lx, %llu )", ARG1, ARG2, (ULong)ARG3);
+   PRINT("sys_listxattr ( %#"PRIxREG", %#"PRIxREG", %llu )", ARG1, ARG2, (ULong)ARG3);
    PRE_REG_READ3(ssize_t, "listxattr",
                  char *, path, char *, list, vki_size_t, size);
    PRE_MEM_RASCIIZ( "listxattr(path)", ARG1 );
@@ -2612,7 +2612,7 @@ POST(sys_listxattr)
 PRE(sys_llistxattr)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_llistxattr ( %#lx, %#lx, %llu )", ARG1, ARG2, (ULong)ARG3);
+   PRINT("sys_llistxattr ( %#"PRIxREG", %#"PRIxREG", %llu )", ARG1, ARG2, (ULong)ARG3);
    PRE_REG_READ3(ssize_t, "llistxattr",
                  char *, path, char *, list, vki_size_t, size);
    PRE_MEM_RASCIIZ( "llistxattr(path)", ARG1 );
@@ -2627,7 +2627,7 @@ POST(sys_llistxattr)
 PRE(sys_flistxattr)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_flistxattr ( %ld, %#lx, %llu )", ARG1, ARG2, (ULong)ARG3);
+   PRINT("sys_flistxattr ( %"PRIdREG", %#"PRIxREG", %llu )", ARG1, ARG2, (ULong)ARG3);
    PRE_REG_READ3(ssize_t, "flistxattr",
                  int, fd, char *, list, vki_size_t, size);
    PRE_MEM_WRITE( "flistxattr(list)", ARG2, ARG3 );
@@ -2641,7 +2641,7 @@ POST(sys_flistxattr)
 PRE(sys_removexattr)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_removexattr ( %#lx, %#lx )", ARG1, ARG2);
+   PRINT("sys_removexattr ( %#"PRIxREG", %#"PRIxREG" )", ARG1, ARG2);
    PRE_REG_READ2(long, "removexattr", char *, path, char *, name);
    PRE_MEM_RASCIIZ( "removexattr(path)", ARG1 );
    PRE_MEM_RASCIIZ( "removexattr(name)", ARG2 );
@@ -2650,7 +2650,7 @@ PRE(sys_removexattr)
 PRE(sys_lremovexattr)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_lremovexattr ( %#lx, %#lx )", ARG1, ARG2);
+   PRINT("sys_lremovexattr ( %#"PRIxREG", %#"PRIxREG" )", ARG1, ARG2);
    PRE_REG_READ2(long, "lremovexattr", char *, path, char *, name);
    PRE_MEM_RASCIIZ( "lremovexattr(path)", ARG1 );
    PRE_MEM_RASCIIZ( "lremovexattr(name)", ARG2 );
@@ -2659,7 +2659,7 @@ PRE(sys_lremovexattr)
 PRE(sys_fremovexattr)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_fremovexattr ( %ld, %#lx )", ARG1, ARG2);
+   PRINT("sys_fremovexattr ( %"PRIdREG", %#"PRIxREG" )", ARG1, ARG2);
    PRE_REG_READ2(long, "fremovexattr", int, fd, char *, name);
    PRE_MEM_RASCIIZ( "fremovexattr(name)", ARG2 );
 }
@@ -2670,7 +2670,7 @@ PRE(sys_fremovexattr)
 
 PRE(sys_sched_setparam)
 {
-   PRINT("sched_setparam ( %ld, %#lx )", ARG1, ARG2 );
+   PRINT("sched_setparam ( %"PRIdREG", %#"PRIxREG" )", ARG1, ARG2 );
    PRE_REG_READ2(long, "sched_setparam", 
                  vki_pid_t, pid, struct sched_param *, p);
    PRE_MEM_READ( "sched_setparam(p)", ARG2, sizeof(struct vki_sched_param) );
@@ -2682,7 +2682,7 @@ POST(sys_sched_setparam)
 
 PRE(sys_sched_getparam)
 {
-   PRINT("sched_getparam ( %ld, %#lx )", ARG1, ARG2 );
+   PRINT("sched_getparam ( %"PRIdREG", %#"PRIxREG" )", ARG1, ARG2 );
    PRE_REG_READ2(long, "sched_getparam", 
                  vki_pid_t, pid, struct sched_param *, p);
    PRE_MEM_WRITE( "sched_getparam(p)", ARG2, sizeof(struct vki_sched_param) );
@@ -2694,13 +2694,13 @@ POST(sys_sched_getparam)
 
 PRE(sys_sched_getscheduler)
 {
-   PRINT("sys_sched_getscheduler ( %ld )", ARG1);
+   PRINT("sys_sched_getscheduler ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "sched_getscheduler", vki_pid_t, pid);
 }
 
 PRE(sys_sched_setscheduler)
 {
-   PRINT("sys_sched_setscheduler ( %ld, %ld, %#lx )", ARG1,ARG2,ARG3);
+   PRINT("sys_sched_setscheduler ( %"PRIdREG", %"PRIdREG", %#"PRIxREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "sched_setscheduler", 
                  vki_pid_t, pid, int, policy, struct sched_param *, p);
    if (ARG3 != 0)
@@ -2717,19 +2717,19 @@ PRE(sys_sched_yield)
 
 PRE(sys_sched_get_priority_max)
 {
-   PRINT("sched_get_priority_max ( %ld )", ARG1);
+   PRINT("sched_get_priority_max ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "sched_get_priority_max", int, policy);
 }
 
 PRE(sys_sched_get_priority_min)
 {
-   PRINT("sched_get_priority_min ( %ld )", ARG1);
+   PRINT("sched_get_priority_min ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(long, "sched_get_priority_min", int, policy);
 }
 
 PRE(sys_sched_rr_get_interval)
 {
-   PRINT("sys_sched_rr_get_interval ( %ld, %#lx )", ARG1, ARG2);
+   PRINT("sys_sched_rr_get_interval ( %"PRIdREG", %#"PRIxREG" )", ARG1, ARG2);
    PRE_REG_READ2(int, "sched_rr_get_interval",
                  vki_pid_t, pid,
                  struct vki_timespec *, tp);
@@ -2744,7 +2744,7 @@ POST(sys_sched_rr_get_interval)
 
 PRE(sys_sched_setaffinity)
 {
-   PRINT("sched_setaffinity ( %ld, %ld, %#lx )", ARG1, ARG2, ARG3);
+   PRINT("sched_setaffinity ( %"PRIdREG", %"PRIdREG", %#"PRIxREG" )", ARG1, ARG2, ARG3);
    PRE_REG_READ3(long, "sched_setaffinity", 
                  vki_pid_t, pid, unsigned int, len, unsigned long *, mask);
    PRE_MEM_READ( "sched_setaffinity(mask)", ARG3, ARG2);
@@ -2752,7 +2752,7 @@ PRE(sys_sched_setaffinity)
 
 PRE(sys_sched_getaffinity)
 {
-   PRINT("sched_getaffinity ( %ld, %ld, %#lx )", ARG1, ARG2, ARG3);
+   PRINT("sched_getaffinity ( %"PRIdREG", %"PRIdREG", %#"PRIxREG" )", ARG1, ARG2, ARG3);
    PRE_REG_READ3(long, "sched_getaffinity", 
                  vki_pid_t, pid, unsigned int, len, unsigned long *, mask);
    PRE_MEM_WRITE( "sched_getaffinity(mask)", ARG3, ARG2);
@@ -2764,7 +2764,7 @@ POST(sys_sched_getaffinity)
 
 PRE(sys_unshare)
 {
-   PRINT("sys_unshare ( %ld )", ARG1);
+   PRINT("sys_unshare ( %"PRIdREG" )", ARG1);
    PRE_REG_READ1(int, "unshare", int, flags);
 }
 
@@ -2793,7 +2793,7 @@ PRE(sys_munlockall)
 // AMD64.
 PRE(sys_pipe)
 {
-   PRINT("sys_pipe ( %#lx )", ARG1);
+   PRINT("sys_pipe ( %#"PRIxREG" )", ARG1);
    PRE_REG_READ1(int, "pipe", int *, filedes);
    PRE_MEM_WRITE( "pipe(filedes)", ARG1, 2*sizeof(int) );
 }
@@ -2820,7 +2820,7 @@ POST(sys_pipe)
    duplicated code, hence: */
 PRE(sys_pipe2)
 {
-   PRINT("sys_pipe2 ( %#lx, %#lx )", ARG1, ARG2);
+   PRINT("sys_pipe2 ( %#"PRIxREG", %#"PRIxREG" )", ARG1, ARG2);
    PRE_REG_READ2(int, "pipe", int *, filedes, long, flags);
    PRE_MEM_WRITE( "pipe2(filedes)", ARG1, 2*sizeof(int) );
 }
@@ -2843,7 +2843,7 @@ POST(sys_pipe2)
 
 PRE(sys_dup3)
 {
-   PRINT("sys_dup3 ( %ld, %ld, %ld )", ARG1,ARG2,ARG3);
+   PRINT("sys_dup3 ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "dup3", unsigned int, oldfd, unsigned int, newfd, int, flags);
    if (!ML_(fd_allowed)(ARG2, "dup3", tid, True))
       SET_STATUS_Failure( VKI_EBADF );
@@ -2858,7 +2858,7 @@ POST(sys_dup3)
 
 PRE(sys_quotactl)
 {
-   PRINT("sys_quotactl (0x%lx, %#lx, 0x%lx, 0x%lx )", ARG1,ARG2,ARG3, ARG4);
+   PRINT("sys_quotactl (0x%"PRIxREG", %#"PRIxREG", 0x%"PRIxREG", 0x%"PRIxREG" )", ARG1,ARG2,ARG3, ARG4);
    PRE_REG_READ4(long, "quotactl",
                  unsigned int, cmd, const char *, special, vki_qid_t, id,
                  void *, addr);
@@ -2868,7 +2868,7 @@ PRE(sys_quotactl)
 PRE(sys_waitid)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_waitid( %ld, %ld, %#lx, %ld, %#lx )", ARG1,ARG2,ARG3,ARG4,ARG5);
+   PRINT("sys_waitid( %"PRIdREG", %"PRIdREG", %#"PRIxREG", %"PRIdREG", %#"PRIxREG" )", ARG1,ARG2,ARG3,ARG4,ARG5);
    PRE_REG_READ5(int32_t, "sys_waitid",
                  int, which, vki_pid_t, pid, struct vki_siginfo *, infop,
                  int, options, struct vki_rusage *, ru);
@@ -2886,16 +2886,16 @@ POST(sys_waitid)
 PRE(sys_sync_file_range)
 {
    *flags |= SfMayBlock;
-#if VG_WORDSIZE == 4
-   PRINT("sys_sync_file_range ( %ld, %lld, %lld, %ld )",
+#if VG_REGISTERSIZE == 4
+   PRINT("sys_sync_file_range ( %"PRIdREG", %lld, %lld, %"PRIdREG" )",
          ARG1,MERGE64(ARG2,ARG3),MERGE64(ARG4,ARG5),ARG6);
    PRE_REG_READ6(long, "sync_file_range",
                  int, fd,
                  unsigned, MERGE64_FIRST(offset), unsigned, MERGE64_SECOND(offset),
                  unsigned, MERGE64_FIRST(nbytes), unsigned, MERGE64_SECOND(nbytes),
                  unsigned int, flags);
-#elif VG_WORDSIZE == 8
-   PRINT("sys_sync_file_range ( %ld, %lld, %lld, %ld )",
+#elif VG_REGISTERSIZE == 8
+   PRINT("sys_sync_file_range ( %"PRIdREG", %lld, %lld, %"PRIdREG" )",
          ARG1,(Long)ARG2,(Long)ARG3,ARG4);
    PRE_REG_READ4(long, "sync_file_range",
                  int, fd, vki_loff_t, offset, vki_loff_t, nbytes,
@@ -2910,15 +2910,15 @@ PRE(sys_sync_file_range)
 PRE(sys_sync_file_range2)
 {
    *flags |= SfMayBlock;
-#if VG_WORDSIZE == 4
-   PRINT("sys_sync_file_range2 ( %ld, %ld, %lld, %lld )",
+#if VG_REGISTERSIZE == 4
+   PRINT("sys_sync_file_range2 ( %"PRIdREG", %"PRIdREG", %lld, %lld )",
          ARG1,ARG2,MERGE64(ARG3,ARG4),MERGE64(ARG5,ARG6));
    PRE_REG_READ6(long, "sync_file_range2",
                  int, fd, unsigned int, flags,
                  unsigned, MERGE64_FIRST(offset), unsigned, MERGE64_SECOND(offset),
                  unsigned, MERGE64_FIRST(nbytes), unsigned, MERGE64_SECOND(nbytes));
-#elif VG_WORDSIZE == 8
-   PRINT("sys_sync_file_range2 ( %ld, %ld, %lld, %lld )",
+#elif VG_REGISTERSIZE == 8
+   PRINT("sys_sync_file_range2 ( %"PRIdREG", %"PRIdREG", %lld, %lld )",
          ARG1,ARG2,(Long)ARG3,(Long)ARG4);
    PRE_REG_READ4(long, "sync_file_range2",
                  int, fd, unsigned int, flags,
@@ -2932,7 +2932,7 @@ PRE(sys_sync_file_range2)
 
 PRE(sys_stime)
 {
-   PRINT("sys_stime ( %#lx )", ARG1);
+   PRINT("sys_stime ( %#"PRIxREG" )", ARG1);
    PRE_REG_READ1(int, "stime", vki_time_t*, t);
    PRE_MEM_READ( "stime(t)", ARG1, sizeof(vki_time_t) );
 }
@@ -2940,7 +2940,7 @@ PRE(sys_stime)
 PRE(sys_perf_event_open)
 {
    struct vki_perf_event_attr *attr;
-   PRINT("sys_perf_event_open ( %#lx, %ld, %ld, %ld, %ld )",
+   PRINT("sys_perf_event_open ( %#"PRIxREG", %"PRIdREG", %"PRIdREG", %"PRIdREG", %"PRIdREG" )",
          ARG1,ARG2,ARG3,ARG4,ARG5);
    PRE_REG_READ5(long, "perf_event_open",
                  struct vki_perf_event_attr *, attr,
@@ -2967,7 +2967,7 @@ POST(sys_perf_event_open)
 
 PRE(sys_getcpu)
 {
-   PRINT("sys_getcpu ( %#lx, %#lx, %#lx )" , ARG1,ARG2,ARG3);
+   PRINT("sys_getcpu ( %#"PRIxREG", %#"PRIxREG", %#"PRIxREG" )" , ARG1,ARG2,ARG3);
    PRE_REG_READ3(int, "getcpu", 
                  unsigned *, cpu, unsigned *, node, struct vki_getcpu_cache *, tcache);
    if (ARG1 != 0)
@@ -2990,7 +2990,7 @@ POST(sys_getcpu)
 
 PRE(sys_move_pages)
 {
-   PRINT("sys_move_pages ( %ld, %ld, %#lx, %#lx, %#lx, %lx )",
+   PRINT("sys_move_pages ( %"PRIdREG", %"PRIdREG", %#"PRIxREG", %#"PRIxREG", %#"PRIxREG", %"PRIxREG" )",
          ARG1,ARG2,ARG3,ARG4,ARG5,ARG6);
    PRE_REG_READ6(int, "move_pages",
                  vki_pid_t, pid, unsigned long, nr_pages, const void **, pages,
@@ -3013,7 +3013,7 @@ POST(sys_move_pages)
 PRE(sys_utime)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_utime ( %#lx, %#lx )", ARG1,ARG2);
+   PRINT("sys_utime ( %#"PRIxREG", %#"PRIxREG" )", ARG1,ARG2);
    PRE_REG_READ2(long, "utime", char *, filename, struct utimbuf *, buf);
    PRE_MEM_RASCIIZ( "utime(filename)", ARG1 );
    if (ARG2 != 0)
@@ -3026,7 +3026,7 @@ PRE(sys_utime)
 
 PRE(sys_lseek)
 {
-   PRINT("sys_lseek ( %ld, %ld, %ld )", ARG1,ARG2,ARG3);
+   PRINT("sys_lseek ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(vki_off_t, "lseek",
                  unsigned int, fd, vki_off_t, offset, unsigned int, whence);
 }
@@ -3038,13 +3038,13 @@ PRE(sys_lseek)
 PRE(sys_readahead)
 {
    *flags |= SfMayBlock;
-#if VG_WORDSIZE == 4
-   PRINT("sys_readahead ( %ld, %lld, %ld )", ARG1, MERGE64(ARG2,ARG3), ARG4);
+#if VG_REGISTERSIZE == 4
+   PRINT("sys_readahead ( %"PRIdREG", %lld, %"PRIdREG" )", ARG1, MERGE64(ARG2,ARG3), ARG4);
    PRE_REG_READ4(vki_off_t, "readahead",
                  int, fd, unsigned, MERGE64_FIRST(offset),
                  unsigned, MERGE64_SECOND(offset), vki_size_t, count);
-#elif VG_WORDSIZE == 8
-   PRINT("sys_readahead ( %ld, %lld, %ld )", ARG1, (Long)ARG2, ARG3);
+#elif VG_REGISTERSIZE == 8
+   PRINT("sys_readahead ( %"PRIdREG", %lld, %"PRIdREG" )", ARG1, (Long)ARG2, ARG3);
    PRE_REG_READ3(vki_off_t, "readahead",
                  int, fd, vki_loff_t, offset, vki_size_t, count);
 #else
@@ -3060,7 +3060,7 @@ PRE(sys_readahead)
 
 PRE(sys_sigpending)
 {
-   PRINT( "sys_sigpending ( %#lx )", ARG1 );
+   PRINT( "sys_sigpending ( %#"PRIxREG" )", ARG1 );
    PRE_REG_READ1(long, "sigpending", vki_old_sigset_t *, set);
    PRE_MEM_WRITE( "sigpending(set)", ARG1, sizeof(vki_old_sigset_t));
 }
@@ -3083,7 +3083,7 @@ PRE(sys_sigprocmask)
    vki_sigset_t bigger_set;
    vki_sigset_t bigger_oldset;
 
-   PRINT("sys_sigprocmask ( %ld, %#lx, %#lx )",ARG1,ARG2,ARG3);
+   PRINT("sys_sigprocmask ( %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "sigprocmask", 
                  int, how, vki_old_sigset_t *, set, vki_old_sigset_t *, oldset);
    if (ARG2 != 0)
@@ -3132,7 +3132,7 @@ PRE(sys_sigaction)
    vki_sigaction_toK_t   new, *newp;
    vki_sigaction_fromK_t old, *oldp;
 
-   PRINT("sys_sigaction ( %ld, %#lx, %#lx )", ARG1,ARG2,ARG3);
+   PRINT("sys_sigaction ( %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(int, "sigaction",
                  int, signum, const struct old_sigaction *, act,
                  struct old_sigaction *, oldact);
@@ -3185,7 +3185,7 @@ POST(sys_sigaction)
 
 PRE(sys_signalfd)
 {
-   PRINT("sys_signalfd ( %d, %#lx, %llu )", (Int)ARG1,ARG2,(ULong)ARG3);
+   PRINT("sys_signalfd ( %d, %#"PRIxREG", %llu )", (Int)ARG1,ARG2,(ULong)ARG3);
    PRE_REG_READ3(long, "sys_signalfd",
                  int, fd, vki_sigset_t *, sigmask, vki_size_t, sigsetsize);
    PRE_MEM_READ( "signalfd(sigmask)", ARG2, sizeof(vki_sigset_t) );
@@ -3205,7 +3205,7 @@ POST(sys_signalfd)
 
 PRE(sys_signalfd4)
 {
-   PRINT("sys_signalfd4 ( %d, %#lx, %llu, %ld )", (Int)ARG1,ARG2,(ULong)ARG3,ARG4);
+   PRINT("sys_signalfd4 ( %d, %#"PRIxREG", %llu, %"PRIdREG" )", (Int)ARG1,ARG2,(ULong)ARG3,ARG4);
    PRE_REG_READ4(long, "sys_signalfd4",
                  int, fd, vki_sigset_t *, sigmask, vki_size_t, sigsetsize, int, flags);
    PRE_MEM_READ( "signalfd(sigmask)", ARG2, sizeof(vki_sigset_t) );
@@ -3230,7 +3230,7 @@ POST(sys_signalfd4)
 
 PRE(sys_rt_sigaction)
 {
-   PRINT("sys_rt_sigaction ( %ld, %#lx, %#lx, %ld )", ARG1,ARG2,ARG3,ARG4);
+   PRINT("sys_rt_sigaction ( %"PRIdREG", %#"PRIxREG", %#"PRIxREG", %"PRIdREG" )", ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(long, "rt_sigaction",
                  int, signum, const struct sigaction *, act,
                  struct sigaction *, oldact, vki_size_t, sigsetsize);
@@ -3264,7 +3264,7 @@ POST(sys_rt_sigaction)
 
 PRE(sys_rt_sigprocmask)
 {
-   PRINT("sys_rt_sigprocmask ( %ld, %#lx, %#lx, %llu )",ARG1,ARG2,ARG3,(ULong)ARG4);
+   PRINT("sys_rt_sigprocmask ( %"PRIdREG", %#"PRIxREG", %#"PRIxREG", %llu )",ARG1,ARG2,ARG3,(ULong)ARG4);
    PRE_REG_READ4(long, "rt_sigprocmask", 
                  int, how, vki_sigset_t *, set, vki_sigset_t *, oldset,
                  vki_size_t, sigsetsize);
@@ -3296,7 +3296,7 @@ POST(sys_rt_sigprocmask)
 
 PRE(sys_rt_sigpending)
 {
-   PRINT( "sys_rt_sigpending ( %#lx )", ARG1 );
+   PRINT( "sys_rt_sigpending ( %#"PRIxREG" )", ARG1 );
    PRE_REG_READ2(long, "rt_sigpending", 
                  vki_sigset_t *, set, vki_size_t, sigsetsize);
    PRE_MEM_WRITE( "rt_sigpending(set)", ARG1, sizeof(vki_sigset_t));
@@ -3309,7 +3309,7 @@ POST(sys_rt_sigpending)
 PRE(sys_rt_sigtimedwait)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_rt_sigtimedwait ( %#lx, %#lx, %#lx, %lld )",
+   PRINT("sys_rt_sigtimedwait ( %#"PRIxREG", %#"PRIxREG", %#"PRIxREG", %lld )",
          ARG1,ARG2,ARG3,(ULong)ARG4);
    PRE_REG_READ4(long, "rt_sigtimedwait", 
                  const vki_sigset_t *, set, vki_siginfo_t *, info,
@@ -3330,7 +3330,7 @@ POST(sys_rt_sigtimedwait)
 
 PRE(sys_rt_sigqueueinfo)
 {
-   PRINT("sys_rt_sigqueueinfo(%ld, %ld, %#lx)", ARG1, ARG2, ARG3);
+   PRINT("sys_rt_sigqueueinfo(%"PRIdREG", %"PRIdREG", %#"PRIxREG")", ARG1, ARG2, ARG3);
    PRE_REG_READ3(long, "rt_sigqueueinfo", 
                  int, pid, int, sig, vki_siginfo_t *, uinfo);
    if (ARG2 != 0)
@@ -3344,7 +3344,7 @@ POST(sys_rt_sigqueueinfo)
 
 PRE(sys_rt_tgsigqueueinfo)
 {
-   PRINT("sys_rt_tgsigqueueinfo(%ld, %ld, %ld, %#lx)", ARG1, ARG2, ARG3, ARG4);
+   PRINT("sys_rt_tgsigqueueinfo(%"PRIdREG", %"PRIdREG", %"PRIdREG", %#"PRIxREG")", ARG1, ARG2, ARG3, ARG4);
    PRE_REG_READ4(long, "rt_tgsigqueueinfo",
                  int, tgid, int, pid, int, sig, vki_siginfo_t *, uinfo);
    if (ARG3 != 0)
@@ -3368,7 +3368,7 @@ PRE(sys_rt_sigsuspend)
       return EINVAL if it isn't.
     */
    *flags |= SfMayBlock;
-   PRINT("sys_rt_sigsuspend ( %#lx, %ld )", ARG1,ARG2 );
+   PRINT("sys_rt_sigsuspend ( %#"PRIxREG", %"PRIdREG" )", ARG1,ARG2 );
    PRE_REG_READ2(int, "rt_sigsuspend", vki_sigset_t *, mask, vki_size_t, size)
    if (ARG1 != (Addr)NULL) {
       PRE_MEM_READ( "rt_sigsuspend(mask)", ARG1, sizeof(vki_sigset_t) );
@@ -3499,7 +3499,7 @@ static Bool semctl_cmd_has_4args (UWord cmd)
 
 PRE(sys_ipc)
 {
-   PRINT("sys_ipc ( %ld, %ld, %ld, %ld, %#lx, %ld )",
+   PRINT("sys_ipc ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %"PRIdREG", %#"PRIxREG", %"PRIdREG" )",
          ARG1,ARG2,ARG3,ARG4,ARG5,ARG6);
 
    switch (ARG1 /* call */) {
@@ -3603,7 +3603,7 @@ PRE(sys_ipc)
       ML_(generic_PRE_sys_shmctl)( tid, ARG2, ARG3, ARG5 );
       break;
    default:
-      VG_(message)(Vg_DebugMsg, "FATAL: unhandled syscall(ipc) %ld\n", ARG1 );
+      VG_(message)(Vg_DebugMsg, "FATAL: unhandled syscall(ipc) %"PRIdREG"\n", ARG1 );
       VG_(core_panic)("... bye!\n");
       break; /*NOTREACHED*/
    }
@@ -3672,7 +3672,7 @@ POST(sys_ipc)
       break;
    default:
       VG_(message)(Vg_DebugMsg,
-		   "FATAL: unhandled syscall(ipc) %ld\n",
+		   "FATAL: unhandled syscall(ipc) %"PRIdREG"\n",
 		   ARG1 );
       VG_(core_panic)("... bye!\n");
       break; /*NOTREACHED*/
@@ -3682,14 +3682,14 @@ POST(sys_ipc)
 
 PRE(sys_semget)
 {
-   PRINT("sys_semget ( %ld, %ld, %ld )",ARG1,ARG2,ARG3);
+   PRINT("sys_semget ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "semget", vki_key_t, key, int, nsems, int, semflg);
 }
 
 PRE(sys_semop)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_semop ( %ld, %#lx, %lu )",ARG1,ARG2,ARG3);
+   PRINT("sys_semop ( %"PRIdREG", %#"PRIxREG", %"PRIuREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "semop",
                  int, semid, struct sembuf *, sops, unsigned, nsoops);
    ML_(generic_PRE_sys_semop)(tid, ARG1,ARG2,ARG3);
@@ -3700,25 +3700,25 @@ PRE(sys_semctl)
    switch (ARG3 & ~VKI_IPC_64) {
    case VKI_IPC_INFO:
    case VKI_SEM_INFO:
-      PRINT("sys_semctl ( %ld, %ld, %ld, %#lx )",ARG1,ARG2,ARG3,ARG4);
+      PRINT("sys_semctl ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %#"PRIxREG" )",ARG1,ARG2,ARG3,ARG4);
       PRE_REG_READ4(long, "semctl",
                     int, semid, int, semnum, int, cmd, struct seminfo *, arg);
       break;
    case VKI_IPC_STAT:
    case VKI_SEM_STAT:
    case VKI_IPC_SET:
-      PRINT("sys_semctl ( %ld, %ld, %ld, %#lx )",ARG1,ARG2,ARG3,ARG4);
+      PRINT("sys_semctl ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %#"PRIxREG" )",ARG1,ARG2,ARG3,ARG4);
       PRE_REG_READ4(long, "semctl",
                     int, semid, int, semnum, int, cmd, struct semid_ds *, arg);
       break;
    case VKI_GETALL:
    case VKI_SETALL:
-      PRINT("sys_semctl ( %ld, %ld, %ld, %#lx )",ARG1,ARG2,ARG3,ARG4);
+      PRINT("sys_semctl ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %#"PRIxREG" )",ARG1,ARG2,ARG3,ARG4);
       PRE_REG_READ4(long, "semctl",
                     int, semid, int, semnum, int, cmd, unsigned short *, arg);
       break;
    default:
-      PRINT("sys_semctl ( %ld, %ld, %ld )",ARG1,ARG2,ARG3);
+      PRINT("sys_semctl ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )",ARG1,ARG2,ARG3);
       PRE_REG_READ3(long, "semctl",
                     int, semid, int, semnum, int, cmd);
       break;
@@ -3742,7 +3742,7 @@ POST(sys_semctl)
 PRE(sys_semtimedop)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_semtimedop ( %ld, %#lx, %lu, %#lx )",ARG1,ARG2,ARG3,ARG4);
+   PRINT("sys_semtimedop ( %"PRIdREG", %#"PRIxREG", %"PRIuREG", %#"PRIxREG" )",ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(long, "semtimedop",
                  int, semid, struct sembuf *, sops, unsigned, nsoops,
                  struct timespec *, timeout);
@@ -3751,13 +3751,13 @@ PRE(sys_semtimedop)
 
 PRE(sys_msgget)
 {
-   PRINT("sys_msgget ( %ld, %ld )",ARG1,ARG2);
+   PRINT("sys_msgget ( %"PRIdREG", %"PRIdREG" )",ARG1,ARG2);
    PRE_REG_READ2(long, "msgget", vki_key_t, key, int, msgflg);
 }
 
 PRE(sys_msgsnd)
 {
-   PRINT("sys_msgsnd ( %ld, %#lx, %ld, %ld )",ARG1,ARG2,ARG3,ARG4);
+   PRINT("sys_msgsnd ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIdREG" )",ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(long, "msgsnd",
                  int, msqid, struct msgbuf *, msgp, vki_size_t, msgsz, int, msgflg);
    ML_(linux_PRE_sys_msgsnd)(tid, ARG1,ARG2,ARG3,ARG4);
@@ -3767,7 +3767,7 @@ PRE(sys_msgsnd)
 
 PRE(sys_msgrcv)
 {
-   PRINT("sys_msgrcv ( %ld, %#lx, %ld, %ld, %ld )",ARG1,ARG2,ARG3,ARG4,ARG5);
+   PRINT("sys_msgrcv ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIdREG", %"PRIdREG" )",ARG1,ARG2,ARG3,ARG4,ARG5);
    PRE_REG_READ5(long, "msgrcv",
                  int, msqid, struct msgbuf *, msgp, vki_size_t, msgsz,
                  long, msgytp, int, msgflg);
@@ -3782,7 +3782,7 @@ POST(sys_msgrcv)
 
 PRE(sys_msgctl)
 {
-   PRINT("sys_msgctl ( %ld, %ld, %#lx )",ARG1,ARG2,ARG3);
+   PRINT("sys_msgctl ( %"PRIdREG", %"PRIdREG", %#"PRIxREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "msgctl",
                  int, msqid, int, cmd, struct msqid_ds *, buf);
    ML_(linux_PRE_sys_msgctl)(tid, ARG1,ARG2,ARG3);
@@ -3795,14 +3795,14 @@ POST(sys_msgctl)
 
 PRE(sys_shmget)
 {
-   PRINT("sys_shmget ( %ld, %ld, %ld )",ARG1,ARG2,ARG3);
+   PRINT("sys_shmget ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "shmget", vki_key_t, key, vki_size_t, size, int, shmflg);
 }
 
 PRE(wrap_sys_shmat)
 {
    UWord arg2tmp;
-   PRINT("wrap_sys_shmat ( %ld, %#lx, %ld )",ARG1,ARG2,ARG3);
+   PRINT("wrap_sys_shmat ( %"PRIdREG", %#"PRIxREG", %"PRIdREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "shmat",
                  int, shmid, const void *, shmaddr, int, shmflg);
 #if defined(VGP_arm_linux)
@@ -3827,7 +3827,7 @@ POST(wrap_sys_shmat)
 
 PRE(sys_shmdt)
 {
-   PRINT("sys_shmdt ( %#lx )",ARG1);
+   PRINT("sys_shmdt ( %#"PRIxREG" )",ARG1);
    PRE_REG_READ1(long, "shmdt", const void *, shmaddr);
    if (!ML_(generic_PRE_sys_shmdt)(tid, ARG1))
       SET_STATUS_Failure( VKI_EINVAL );
@@ -3840,7 +3840,7 @@ POST(sys_shmdt)
 
 PRE(sys_shmctl)
 {
-   PRINT("sys_shmctl ( %ld, %ld, %#lx )",ARG1,ARG2,ARG3);
+   PRINT("sys_shmctl ( %"PRIdREG", %"PRIdREG", %#"PRIxREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "shmctl",
                  int, shmid, int, cmd, struct shmid_ds *, buf);
 #ifdef VGP_amd64_linux
@@ -3887,7 +3887,7 @@ PRE(sys_socketcall)
    }
 
    *flags |= SfMayBlock;
-   PRINT("sys_socketcall ( %ld, %#lx )",ARG1,ARG2);
+   PRINT("sys_socketcall ( %"PRIdREG", %#"PRIxREG" )",ARG1,ARG2);
    PRE_REG_READ2(long, "socketcall", int, call, unsigned long *, args);
 
    switch (ARG1 /* request */) {
@@ -4014,7 +4014,7 @@ PRE(sys_socketcall)
       break;
 
    default:
-      VG_(message)(Vg_DebugMsg,"Warning: unhandled socketcall 0x%lx\n",ARG1);
+      VG_(message)(Vg_DebugMsg,"Warning: unhandled socketcall 0x%"PRIxREG"\n",ARG1);
       SET_STATUS_Failure( VKI_EINVAL );
       break;
    }
@@ -4119,7 +4119,7 @@ POST(sys_socketcall)
       break;
 
    default:
-      VG_(message)(Vg_DebugMsg,"FATAL: unhandled socketcall 0x%lx\n",ARG1);
+      VG_(message)(Vg_DebugMsg,"FATAL: unhandled socketcall 0x%"PRIxREG"\n",ARG1);
       VG_(core_panic)("... bye!\n");
       break; /*NOTREACHED*/
    }
@@ -4134,7 +4134,7 @@ POST(sys_socketcall)
 
 PRE(sys_socket)
 {
-   PRINT("sys_socket ( %ld, %ld, %ld )",ARG1,ARG2,ARG3);
+   PRINT("sys_socket ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "socket", int, domain, int, type, int, protocol);
 }
 POST(sys_socket)
@@ -4147,7 +4147,7 @@ POST(sys_socket)
 
 PRE(sys_setsockopt)
 {
-   PRINT("sys_setsockopt ( %ld, %ld, %ld, %#lx, %ld )",ARG1,ARG2,ARG3,ARG4,ARG5);
+   PRINT("sys_setsockopt ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %#"PRIxREG", %"PRIdREG" )",ARG1,ARG2,ARG3,ARG4,ARG5);
    PRE_REG_READ5(long, "setsockopt",
                  int, s, int, level, int, optname,
                  const void *, optval, int, optlen);
@@ -4156,7 +4156,7 @@ PRE(sys_setsockopt)
 
 PRE(sys_getsockopt)
 {
-   PRINT("sys_getsockopt ( %ld, %ld, %ld, %#lx, %#lx )",ARG1,ARG2,ARG3,ARG4,ARG5);
+   PRINT("sys_getsockopt ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )",ARG1,ARG2,ARG3,ARG4,ARG5);
    PRE_REG_READ5(long, "getsockopt",
                  int, s, int, level, int, optname,
                  void *, optval, int, *optlen);
@@ -4172,7 +4172,7 @@ POST(sys_getsockopt)
 PRE(sys_connect)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_connect ( %ld, %#lx, %ld )",ARG1,ARG2,ARG3);
+   PRINT("sys_connect ( %"PRIdREG", %#"PRIxREG", %"PRIdREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "connect",
                  int, sockfd, struct sockaddr *, serv_addr, int, addrlen);
    ML_(generic_PRE_sys_connect)(tid, ARG1,ARG2,ARG3);
@@ -4181,7 +4181,7 @@ PRE(sys_connect)
 PRE(sys_accept)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_accept ( %ld, %#lx, %ld )",ARG1,ARG2,ARG3);
+   PRINT("sys_accept ( %"PRIdREG", %#"PRIxREG", %"PRIdREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "accept",
                  int, s, struct sockaddr *, addr, int, *addrlen);
    ML_(generic_PRE_sys_accept)(tid, ARG1,ARG2,ARG3);
@@ -4198,7 +4198,7 @@ POST(sys_accept)
 PRE(sys_accept4)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_accept4 ( %ld, %#lx, %ld, %ld )",ARG1,ARG2,ARG3,ARG4);
+   PRINT("sys_accept4 ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIdREG" )",ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(long, "accept4",
                  int, s, struct sockaddr *, addr, int, *addrlen, int, flags);
    ML_(generic_PRE_sys_accept)(tid, ARG1,ARG2,ARG3);
@@ -4215,7 +4215,7 @@ POST(sys_accept4)
 PRE(sys_send)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_send ( %ld, %#lx, %ld, %lu )",ARG1,ARG2,ARG3,ARG4);
+   PRINT("sys_send ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIuREG" )",ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(long, "send",
                  int, s, const void *, msg, int, len, 
                  unsigned int, flags);
@@ -4226,7 +4226,7 @@ PRE(sys_send)
 PRE(sys_sendto)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_sendto ( %ld, %#lx, %ld, %lu, %#lx, %ld )",ARG1,ARG2,ARG3,ARG4,ARG5,ARG6);
+   PRINT("sys_sendto ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIuREG", %#"PRIxREG", %"PRIdREG" )",ARG1,ARG2,ARG3,ARG4,ARG5,ARG6);
    PRE_REG_READ6(long, "sendto",
                  int, s, const void *, msg, int, len, 
                  unsigned int, flags, 
@@ -4237,7 +4237,7 @@ PRE(sys_sendto)
 PRE (sys_recv) 
 {
   *flags |= SfMayBlock;
-  PRINT ("sys_recv ( %ld, %#lx, %ld, %lu )", ARG1, ARG2, ARG3, ARG4);
+  PRINT ("sys_recv ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIuREG" )", ARG1, ARG2, ARG3, ARG4);
   PRE_REG_READ4 (long, "recv", int, s, void *, buf, int, len,
                  unsigned int, flags);
   ML_ (generic_PRE_sys_recv) (tid, ARG1, ARG2, ARG3);
@@ -4251,7 +4251,7 @@ POST (sys_recv)
 PRE(sys_recvfrom)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_recvfrom ( %ld, %#lx, %ld, %lu, %#lx, %#lx )",ARG1,ARG2,ARG3,ARG4,ARG5,ARG6);
+   PRINT("sys_recvfrom ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIuREG", %#"PRIxREG", %#"PRIxREG" )",ARG1,ARG2,ARG3,ARG4,ARG5,ARG6);
    PRE_REG_READ6(long, "recvfrom",
                  int, s, void *, buf, int, len, unsigned int, flags,
                  struct sockaddr *, from, int *, fromlen);
@@ -4267,7 +4267,7 @@ POST(sys_recvfrom)
 PRE(sys_sendmsg)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_sendmsg ( %ld, %#lx, %ld )",ARG1,ARG2,ARG3);
+   PRINT("sys_sendmsg ( %"PRIdREG", %#"PRIxREG", %"PRIdREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "sendmsg",
                  int, s, const struct msghdr *, msg, int, flags);
    ML_(generic_PRE_sys_sendmsg)(tid, "msg", (struct vki_msghdr *)ARG2);
@@ -4276,7 +4276,7 @@ PRE(sys_sendmsg)
 PRE(sys_recvmsg)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_recvmsg ( %ld, %#lx, %ld )",ARG1,ARG2,ARG3);
+   PRINT("sys_recvmsg ( %"PRIdREG", %#"PRIxREG", %"PRIdREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "recvmsg", int, s, struct msghdr *, msg, int, flags);
    ML_(generic_PRE_sys_recvmsg)(tid, "msg", (struct vki_msghdr *)ARG2);
 }
@@ -4288,13 +4288,13 @@ POST(sys_recvmsg)
 PRE(sys_shutdown)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_shutdown ( %ld, %ld )",ARG1,ARG2);
+   PRINT("sys_shutdown ( %"PRIdREG", %"PRIdREG" )",ARG1,ARG2);
    PRE_REG_READ2(int, "shutdown", int, s, int, how);
 }
 
 PRE(sys_bind)
 {
-   PRINT("sys_bind ( %ld, %#lx, %ld )",ARG1,ARG2,ARG3);
+   PRINT("sys_bind ( %"PRIdREG", %#"PRIxREG", %"PRIdREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "bind",
                  int, sockfd, struct sockaddr *, my_addr, int, addrlen);
    ML_(generic_PRE_sys_bind)(tid, ARG1,ARG2,ARG3);
@@ -4302,13 +4302,13 @@ PRE(sys_bind)
 
 PRE(sys_listen)
 {
-   PRINT("sys_listen ( %ld, %ld )",ARG1,ARG2);
+   PRINT("sys_listen ( %"PRIdREG", %"PRIdREG" )",ARG1,ARG2);
    PRE_REG_READ2(long, "listen", int, s, int, backlog);
 }
 
 PRE(sys_getsockname)
 {
-   PRINT("sys_getsockname ( %ld, %#lx, %#lx )",ARG1,ARG2,ARG3);
+   PRINT("sys_getsockname ( %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "getsockname",
                  int, s, struct sockaddr *, name, int *, namelen);
    ML_(generic_PRE_sys_getsockname)(tid, ARG1,ARG2,ARG3);
@@ -4322,7 +4322,7 @@ POST(sys_getsockname)
 
 PRE(sys_getpeername)
 {
-   PRINT("sys_getpeername ( %ld, %#lx, %#lx )",ARG1,ARG2,ARG3);
+   PRINT("sys_getpeername ( %"PRIdREG", %#"PRIxREG", %#"PRIxREG" )",ARG1,ARG2,ARG3);
    PRE_REG_READ3(long, "getpeername",
                  int, s, struct sockaddr *, name, int *, namelen);
    ML_(generic_PRE_sys_getpeername)(tid, ARG1,ARG2,ARG3);
@@ -4336,7 +4336,7 @@ POST(sys_getpeername)
 
 PRE(sys_socketpair)
 {
-   PRINT("sys_socketpair ( %ld, %ld, %ld, %#lx )",ARG1,ARG2,ARG3,ARG4);
+   PRINT("sys_socketpair ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %#"PRIxREG" )",ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(long, "socketpair",
                  int, d, int, type, int, protocol, int*, sv);
    ML_(generic_PRE_sys_socketpair)(tid, ARG1,ARG2,ARG3,ARG4);
@@ -4360,12 +4360,12 @@ PRE(sys_openat)
 
    if (ARG3 & VKI_O_CREAT) {
       // 4-arg version
-      PRINT("sys_openat ( %ld, %#lx(%s), %ld, %ld )",ARG1,ARG2,(char*)ARG2,ARG3,ARG4);
+      PRINT("sys_openat ( %"PRIdREG", %#"PRIxREG"(%s), %"PRIdREG", %"PRIdREG" )",ARG1,ARG2,(char*)ARG2,ARG3,ARG4);
       PRE_REG_READ4(long, "openat",
                     int, dfd, const char *, filename, int, flags, int, mode);
    } else {
       // 3-arg version
-      PRINT("sys_openat ( %ld, %#lx(%s), %ld )",ARG1,ARG2,(char*)ARG2,ARG3);
+      PRINT("sys_openat ( %"PRIdREG", %#"PRIxREG"(%s), %"PRIdREG" )",ARG1,ARG2,(char*)ARG2,ARG3);
       PRE_REG_READ3(long, "openat",
                     int, dfd, const char *, filename, int, flags);
    }
@@ -4434,7 +4434,7 @@ POST(sys_openat)
 PRE(sys_mkdirat)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_mkdirat ( %ld, %#lx(%s), %ld )", ARG1,ARG2,(char*)ARG2,ARG3);
+   PRINT("sys_mkdirat ( %"PRIdREG", %#"PRIxREG"(%s), %"PRIdREG" )", ARG1,ARG2,(char*)ARG2,ARG3);
    PRE_REG_READ3(long, "mkdirat",
                  int, dfd, const char *, pathname, int, mode);
    PRE_MEM_RASCIIZ( "mkdirat(pathname)", ARG2 );
@@ -4442,7 +4442,7 @@ PRE(sys_mkdirat)
 
 PRE(sys_mknodat)
 {
-  PRINT("sys_mknodat ( %ld, %#lx(%s), 0x%lx, 0x%lx )", ARG1,ARG2,(char*)ARG2,ARG3,ARG4 );
+  PRINT("sys_mknodat ( %"PRIdREG", %#"PRIxREG"(%s), 0x%"PRIxREG", 0x%"PRIxREG" )", ARG1,ARG2,(char*)ARG2,ARG3,ARG4 );
    PRE_REG_READ4(long, "mknodat",
                  int, dfd, const char *, pathname, int, mode, unsigned, dev);
    PRE_MEM_RASCIIZ( "mknodat(pathname)", ARG2 );
@@ -4450,7 +4450,7 @@ PRE(sys_mknodat)
 
 PRE(sys_fchownat)
 {
-   PRINT("sys_fchownat ( %ld, %#lx(%s), 0x%lx, 0x%lx )", ARG1,ARG2,(char*)ARG2,ARG3,ARG4);
+   PRINT("sys_fchownat ( %"PRIdREG", %#"PRIxREG"(%s), 0x%"PRIxREG", 0x%"PRIxREG" )", ARG1,ARG2,(char*)ARG2,ARG3,ARG4);
    PRE_REG_READ4(long, "fchownat",
                  int, dfd, const char *, path,
                  vki_uid_t, owner, vki_gid_t, group);
@@ -4459,7 +4459,7 @@ PRE(sys_fchownat)
 
 PRE(sys_futimesat)
 {
-   PRINT("sys_futimesat ( %ld, %#lx(%s), %#lx )", ARG1,ARG2,(char*)ARG2,ARG3);
+   PRINT("sys_futimesat ( %"PRIdREG", %#"PRIxREG"(%s), %#"PRIxREG" )", ARG1,ARG2,(char*)ARG2,ARG3);
    PRE_REG_READ3(long, "futimesat",
                  int, dfd, char *, filename, struct timeval *, tvp);
    if (ARG2 != 0)
@@ -4470,7 +4470,7 @@ PRE(sys_futimesat)
 
 PRE(sys_utimensat)
 {
-   PRINT("sys_utimensat ( %ld, %#lx(%s), %#lx, 0x%lx )", ARG1,ARG2,(char*)ARG2,ARG3,ARG4);
+   PRINT("sys_utimensat ( %"PRIdREG", %#"PRIxREG"(%s), %#"PRIxREG", 0x%"PRIxREG" )", ARG1,ARG2,(char*)ARG2,ARG3,ARG4);
    PRE_REG_READ4(long, "utimensat",
                  int, dfd, char *, filename, struct timespec *, utimes, int, flags);
    if (ARG2 != 0)
@@ -4482,7 +4482,7 @@ PRE(sys_utimensat)
 PRE(sys_newfstatat)
 {
    FUSE_COMPATIBLE_MAY_BLOCK();
-   PRINT("sys_newfstatat ( %ld, %#lx(%s), %#lx )", ARG1,ARG2,(char*)ARG2,ARG3);
+   PRINT("sys_newfstatat ( %"PRIdREG", %#"PRIxREG"(%s), %#"PRIxREG" )", ARG1,ARG2,(char*)ARG2,ARG3);
    PRE_REG_READ3(long, "fstatat",
                  int, dfd, char *, file_name, struct stat *, buf);
    PRE_MEM_RASCIIZ( "fstatat(file_name)", ARG2 );
@@ -4497,14 +4497,14 @@ POST(sys_newfstatat)
 PRE(sys_unlinkat)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_unlinkat ( %ld, %#lx(%s) )", ARG1,ARG2,(char*)ARG2);
+   PRINT("sys_unlinkat ( %"PRIdREG", %#"PRIxREG"(%s) )", ARG1,ARG2,(char*)ARG2);
    PRE_REG_READ2(long, "unlinkat", int, dfd, const char *, pathname);
    PRE_MEM_RASCIIZ( "unlinkat(pathname)", ARG2 );
 }
 
 PRE(sys_renameat)
 {
-   PRINT("sys_renameat ( %ld, %#lx(%s), %ld, %#lx(%s) )", ARG1,ARG2,(char*)ARG2,ARG3,ARG4,(char*)ARG4);
+   PRINT("sys_renameat ( %"PRIdREG", %#"PRIxREG"(%s), %"PRIdREG", %#"PRIxREG"(%s) )", ARG1,ARG2,(char*)ARG2,ARG3,ARG4,(char*)ARG4);
    PRE_REG_READ4(long, "renameat",
                  int, olddfd, const char *, oldpath,
                  int, newdfd, const char *, newpath);
@@ -4515,7 +4515,7 @@ PRE(sys_renameat)
 PRE(sys_linkat)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_linkat ( %ld, %#lx(%s), %ld, %#lx(%s), %ld )",ARG1,ARG2,(char*)ARG2,ARG3,ARG4,(char*)ARG4,ARG5);
+   PRINT("sys_linkat ( %"PRIdREG", %#"PRIxREG"(%s), %"PRIdREG", %#"PRIxREG"(%s), %"PRIdREG" )",ARG1,ARG2,(char*)ARG2,ARG3,ARG4,(char*)ARG4,ARG5);
    PRE_REG_READ5(long, "linkat",
                  int, olddfd, const char *, oldpath,
                  int, newdfd, const char *, newpath,
@@ -4527,7 +4527,7 @@ PRE(sys_linkat)
 PRE(sys_symlinkat)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_symlinkat ( %#lx(%s), %ld, %#lx(%s) )",ARG1,(char*)ARG1,ARG2,ARG3,(char*)ARG3);
+   PRINT("sys_symlinkat ( %#"PRIxREG"(%s), %"PRIdREG", %#"PRIxREG"(%s) )",ARG1,(char*)ARG1,ARG2,ARG3,(char*)ARG3);
    PRE_REG_READ3(long, "symlinkat",
                  const char *, oldpath, int, newdfd, const char *, newpath);
    PRE_MEM_RASCIIZ( "symlinkat(oldpath)", ARG1 );
@@ -4539,7 +4539,7 @@ PRE(sys_readlinkat)
    HChar name[25];
    Word  saved = SYSNO;
 
-   PRINT("sys_readlinkat ( %ld, %#lx(%s), %#lx, %llu )", ARG1,ARG2,(char*)ARG2,ARG3,(ULong)ARG4);
+   PRINT("sys_readlinkat ( %"PRIdREG", %#"PRIxREG"(%s), %#"PRIxREG", %llu )", ARG1,ARG2,(char*)ARG2,ARG3,(ULong)ARG4);
    PRE_REG_READ4(long, "readlinkat",
                  int, dfd, const char *, path, char *, buf, int, bufsiz);
    PRE_MEM_RASCIIZ( "readlinkat(path)", ARG2 );
@@ -4567,7 +4567,7 @@ PRE(sys_readlinkat)
 
 PRE(sys_fchmodat)
 {
-   PRINT("sys_fchmodat ( %ld, %#lx(%s), %ld )", ARG1,ARG2,(char*)ARG2,ARG3);
+   PRINT("sys_fchmodat ( %"PRIdREG", %#"PRIxREG"(%s), %"PRIdREG" )", ARG1,ARG2,(char*)ARG2,ARG3);
    PRE_REG_READ3(long, "fchmodat",
                  int, dfd, const char *, path, vki_mode_t, mode);
    PRE_MEM_RASCIIZ( "fchmodat(path)", ARG2 );
@@ -4575,7 +4575,7 @@ PRE(sys_fchmodat)
 
 PRE(sys_faccessat)
 {
-   PRINT("sys_faccessat ( %ld, %#lx(%s), %ld )", ARG1,ARG2,(char*)ARG2,ARG3);
+   PRINT("sys_faccessat ( %"PRIdREG", %#"PRIxREG"(%s), %"PRIdREG" )", ARG1,ARG2,(char*)ARG2,ARG3);
    PRE_REG_READ3(long, "faccessat",
                  int, dfd, const char *, pathname, int, mode);
    PRE_MEM_RASCIIZ( "faccessat(pathname)", ARG2 );
@@ -4583,7 +4583,7 @@ PRE(sys_faccessat)
 
 PRE(sys_name_to_handle_at)
 {
-   PRINT("sys_name_to_handle_at ( %ld, %#lx(%s), %#lx, %#lx, %ld )", ARG1, ARG2, (char*)ARG2, ARG3, ARG4, ARG5);
+   PRINT("sys_name_to_handle_at ( %"PRIdREG", %#"PRIxREG"(%s), %#"PRIxREG", %#"PRIxREG", %"PRIdREG" )", ARG1, ARG2, (char*)ARG2, ARG3, ARG4, ARG5);
    PRE_REG_READ5(int, "name_to_handle_at",
                  int, dfd, const char *, name,
                  struct vki_file_handle *, handle,
@@ -4607,7 +4607,7 @@ POST(sys_name_to_handle_at)
 PRE(sys_open_by_handle_at)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_open_by_handle_at ( %ld, %#lx, %ld )", ARG1, ARG2, ARG3);
+   PRINT("sys_open_by_handle_at ( %"PRIdREG", %#"PRIxREG", %"PRIdREG" )", ARG1, ARG2, ARG3);
    PRE_REG_READ3(int, "open_by_handle_at",
                  int, mountdirfd,
                  struct vki_file_handle *, handle,
@@ -4636,16 +4636,16 @@ PRE(sys_preadv)
    Int i;
    struct vki_iovec * vec;
    *flags |= SfMayBlock;
-#if VG_WORDSIZE == 4
+#if VG_REGISTERSIZE == 4
    /* Note that the offset argument here is in lo+hi order on both
       big and little endian platforms... */
-   PRINT("sys_preadv ( %ld, %#lx, %llu, %lld )",ARG1,ARG2,(ULong)ARG3,LOHI64(ARG4,ARG5));
+   PRINT("sys_preadv ( %"PRIdREG", %#"PRIxREG", %llu, %lld )",ARG1,ARG2,(ULong)ARG3,LOHI64(ARG4,ARG5));
    PRE_REG_READ5(ssize_t, "preadv",
                  unsigned long, fd, const struct iovec *, vector,
                  unsigned long, count, vki_u32, offset_low,
                  vki_u32, offset_high);
-#elif VG_WORDSIZE == 8
-   PRINT("sys_preadv ( %ld, %#lx, %llu, %lld )",ARG1,ARG2,(ULong)ARG3,(Long)ARG4);
+#elif VG_REGISTERSIZE == 8
+   PRINT("sys_preadv ( %"PRIdREG", %#"PRIxREG", %llu, %lld )",ARG1,ARG2,(ULong)ARG3,(Long)ARG4);
    PRE_REG_READ4(ssize_t, "preadv",
                  unsigned long, fd, const struct iovec *, vector,
                  unsigned long, count, Word, offset);
@@ -4691,16 +4691,16 @@ PRE(sys_pwritev)
    Int i;
    struct vki_iovec * vec;
    *flags |= SfMayBlock;
-#if VG_WORDSIZE == 4
+#if VG_REGISTERSIZE == 4
    /* Note that the offset argument here is in lo+hi order on both
       big and little endian platforms... */
-   PRINT("sys_pwritev ( %ld, %#lx, %llu, %lld )",ARG1,ARG2,(ULong)ARG3,LOHI64(ARG4,ARG5));
+   PRINT("sys_pwritev ( %"PRIdREG", %#"PRIxREG", %llu, %lld )",ARG1,ARG2,(ULong)ARG3,LOHI64(ARG4,ARG5));
    PRE_REG_READ5(ssize_t, "pwritev",
                  unsigned long, fd, const struct iovec *, vector,
                  unsigned long, count, vki_u32, offset_low,
                  vki_u32, offset_high);
-#elif VG_WORDSIZE == 8
-   PRINT("sys_pwritev ( %ld, %#lx, %llu, %lld )",ARG1,ARG2,(ULong)ARG3,(Long)ARG4);
+#elif VG_REGISTERSIZE == 8
+   PRINT("sys_pwritev ( %"PRIdREG", %#"PRIxREG", %llu, %lld )",ARG1,ARG2,(ULong)ARG3,(Long)ARG4);
    PRE_REG_READ4(ssize_t, "pwritev",
                  unsigned long, fd, const struct iovec *, vector,
                  unsigned long, count, Word, offset);
@@ -4728,7 +4728,7 @@ PRE(sys_pwritev)
 
 PRE(sys_process_vm_readv)
 {
-   PRINT("sys_process_vm_readv ( %lu, %#lx, %lu, %#lx, %lu, %lu )",
+   PRINT("sys_process_vm_readv ( %"PRIuREG", %#"PRIxREG", %"PRIuREG", %#"PRIxREG", %"PRIuREG", %"PRIuREG" )",
          ARG1, ARG2, ARG3, ARG4, ARG5, ARG6);
    PRE_REG_READ6(ssize_t, "process_vm_readv",
                  vki_pid_t, pid,
@@ -4766,7 +4766,7 @@ POST(sys_process_vm_readv)
 
 PRE(sys_process_vm_writev)
 {
-   PRINT("sys_process_vm_writev ( %lu, %#lx, %lu, %#lx, %lu, %lu )",
+   PRINT("sys_process_vm_writev ( %"PRIuREG", %#"PRIxREG", %"PRIuREG", %#"PRIxREG", %"PRIuREG", %"PRIuREG" )",
          ARG1, ARG2, ARG3, ARG4, ARG5, ARG6);
    PRE_REG_READ6(ssize_t, "process_vm_writev",
                  vki_pid_t, pid,
@@ -4799,7 +4799,7 @@ PRE(sys_sendmmsg)
    HChar name[32];
    UInt i;
    *flags |= SfMayBlock;
-   PRINT("sys_sendmmsg ( %ld, %#lx, %ld, %ld )",ARG1,ARG2,ARG3,ARG4);
+   PRINT("sys_sendmmsg ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIdREG" )",ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(long, "sendmmsg",
                  int, s, const struct mmsghdr *, mmsg, int, vlen, int, flags);
    for (i = 0; i < ARG3; i++) {
@@ -4827,7 +4827,7 @@ PRE(sys_recvmmsg)
    HChar name[32];
    UInt i;
    *flags |= SfMayBlock;
-   PRINT("sys_recvmmsg ( %ld, %#lx, %ld, %ld, %#lx )",ARG1,ARG2,ARG3,ARG4,ARG5);
+   PRINT("sys_recvmmsg ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIdREG", %#"PRIxREG" )",ARG1,ARG2,ARG3,ARG4,ARG5);
    PRE_REG_READ5(long, "recvmmsg",
                  int, s, struct mmsghdr *, mmsg, int, vlen,
                  int, flags, struct timespec *, timeout);
@@ -4861,7 +4861,7 @@ POST(sys_recvmmsg)
 
 PRE(sys_request_key)
 {
-   PRINT("sys_request_key ( %#lx(%s), %#lx(%s), %#lx(%s), %ld )",
+   PRINT("sys_request_key ( %#"PRIxREG"(%s), %#"PRIxREG"(%s), %#"PRIxREG"(%s), %"PRIdREG" )",
          ARG1,(char*)ARG1,ARG2,(char*)ARG2,ARG3,(char*)ARG3,ARG4);
    PRE_REG_READ4(long, "request_key",
                  const char *, type, const char *, description, 
@@ -4874,7 +4874,7 @@ PRE(sys_request_key)
 
 PRE(sys_add_key)
 {
-   PRINT("sys_add_key ( %#lx(%s), %#lx(%s), %#lx, %ld, %ld )",
+   PRINT("sys_add_key ( %#"PRIxREG"(%s), %#"PRIxREG"(%s), %#"PRIxREG", %"PRIdREG", %"PRIdREG" )",
          ARG1,(char*)ARG1,ARG2,(char*)ARG2,ARG3,ARG4,ARG5);
    PRE_REG_READ5(long, "add_key",
                  const char *, type, const char *, description,
@@ -4890,19 +4890,19 @@ PRE(sys_keyctl)
 {
    switch (ARG1 /* option */) {
    case VKI_KEYCTL_GET_KEYRING_ID:
-      PRINT("sys_keyctl ( KEYCTL_GET_KEYRING_ID, %ld, %ld )", ARG2,ARG3);
+      PRINT("sys_keyctl ( KEYCTL_GET_KEYRING_ID, %"PRIdREG", %"PRIdREG" )", ARG2,ARG3);
       PRE_REG_READ3(long, "keyctl(KEYCTL_GET_KEYRING_ID)",
                     int, option, vki_key_serial_t, id, int, create);
       break;
    case VKI_KEYCTL_JOIN_SESSION_KEYRING:
-      PRINT("sys_keyctl ( KEYCTL_JOIN_SESSION_KEYRING, %#lx(%s) )", ARG2,(char*)ARG2);
+      PRINT("sys_keyctl ( KEYCTL_JOIN_SESSION_KEYRING, %#"PRIxREG"(%s) )", ARG2,(char*)ARG2);
       PRE_REG_READ2(long, "keyctl(KEYCTL_JOIN_SESSION_KEYRING)",
                     int, option, const char *, name);
       if (ARG2 != (UWord)NULL)
          PRE_MEM_RASCIIZ("keyctl(KEYCTL_JOIN_SESSION_KEYRING, name)", ARG2);
       break;
    case VKI_KEYCTL_UPDATE:
-      PRINT("sys_keyctl ( KEYCTL_UPDATE, %ld, %#lx, %ld )", ARG2,ARG3,ARG4);
+      PRINT("sys_keyctl ( KEYCTL_UPDATE, %"PRIdREG", %#"PRIxREG", %"PRIdREG" )", ARG2,ARG3,ARG4);
       PRE_REG_READ4(long, "keyctl(KEYCTL_UPDATE)",
                     int, option, vki_key_serial_t, key,
                     const void *, payload, vki_size_t, plen);
@@ -4910,23 +4910,23 @@ PRE(sys_keyctl)
          PRE_MEM_READ("keyctl(KEYCTL_UPDATE, payload)", ARG3, ARG4);
       break;
    case VKI_KEYCTL_REVOKE:
-      PRINT("sys_keyctl ( KEYCTL_REVOKE, %ld )", ARG2);
+      PRINT("sys_keyctl ( KEYCTL_REVOKE, %"PRIdREG" )", ARG2);
       PRE_REG_READ2(long, "keyctl(KEYCTL_REVOKE)",
                     int, option, vki_key_serial_t, id);
       break;
    case VKI_KEYCTL_CHOWN:
-      PRINT("sys_keyctl ( KEYCTL_CHOWN, %ld, %ld, %ld )", ARG2,ARG3,ARG4);
+      PRINT("sys_keyctl ( KEYCTL_CHOWN, %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG2,ARG3,ARG4);
       PRE_REG_READ4(long, "keyctl(KEYCTL_CHOWN)",
                     int, option, vki_key_serial_t, id,
                     vki_uid_t, uid, vki_gid_t, gid);
       break;
    case VKI_KEYCTL_SETPERM:
-      PRINT("sys_keyctl ( KEYCTL_SETPERM, %ld, %ld )", ARG2,ARG3);
+      PRINT("sys_keyctl ( KEYCTL_SETPERM, %"PRIdREG", %"PRIdREG" )", ARG2,ARG3);
       PRE_REG_READ3(long, "keyctl(KEYCTL_SETPERM)",
                     int, option, vki_key_serial_t, id, vki_key_perm_t, perm);
       break;
    case VKI_KEYCTL_DESCRIBE:
-      PRINT("sys_keyctl ( KEYCTL_DESCRIBE, %ld, %#lx, %ld )", ARG2,ARG3,ARG4);
+      PRINT("sys_keyctl ( KEYCTL_DESCRIBE, %"PRIdREG", %#"PRIxREG", %"PRIdREG" )", ARG2,ARG3,ARG4);
       PRE_REG_READ4(long, "keyctl(KEYCTL_DESCRIBE)",
                     int, option, vki_key_serial_t, id,
                     char *, buffer, vki_size_t, buflen);
@@ -4934,22 +4934,22 @@ PRE(sys_keyctl)
          PRE_MEM_WRITE("keyctl(KEYCTL_DESCRIBE, buffer)", ARG3, ARG4);
       break;
    case VKI_KEYCTL_CLEAR:
-      PRINT("sys_keyctl ( KEYCTL_CLEAR, %ld )", ARG2);
+      PRINT("sys_keyctl ( KEYCTL_CLEAR, %"PRIdREG" )", ARG2);
       PRE_REG_READ2(long, "keyctl(KEYCTL_CLEAR)",
                     int, option, vki_key_serial_t, keyring);
       break;
    case VKI_KEYCTL_LINK:
-      PRINT("sys_keyctl ( KEYCTL_LINK, %ld, %ld )", ARG2,ARG3);
+      PRINT("sys_keyctl ( KEYCTL_LINK, %"PRIdREG", %"PRIdREG" )", ARG2,ARG3);
       PRE_REG_READ3(long, "keyctl(KEYCTL_LINK)", int, option,
                     vki_key_serial_t, keyring, vki_key_serial_t, key);
       break;
    case VKI_KEYCTL_UNLINK:
-      PRINT("sys_keyctl ( KEYCTL_UNLINK, %ld, %ld )", ARG2,ARG3);
+      PRINT("sys_keyctl ( KEYCTL_UNLINK, %"PRIdREG", %"PRIdREG" )", ARG2,ARG3);
       PRE_REG_READ3(long, "keyctl(KEYCTL_UNLINK)", int, option,
                     vki_key_serial_t, keyring, vki_key_serial_t, key);
       break;
    case VKI_KEYCTL_SEARCH:
-      PRINT("sys_keyctl ( KEYCTL_SEARCH, %ld, %#lx(%s), %#lx(%s), %ld )",
+      PRINT("sys_keyctl ( KEYCTL_SEARCH, %"PRIdREG", %#"PRIxREG"(%s), %#"PRIxREG"(%s), %"PRIdREG" )",
             ARG2,ARG3,(char*)ARG3,ARG4,(char*)ARG4,ARG5);
       PRE_REG_READ5(long, "keyctl(KEYCTL_SEARCH)",
                     int, option, vki_key_serial_t, keyring, 
@@ -4959,7 +4959,7 @@ PRE(sys_keyctl)
       PRE_MEM_RASCIIZ("sys_keyctl(KEYCTL_SEARCH, description)", ARG4);
       break;
    case VKI_KEYCTL_READ:
-      PRINT("sys_keyctl ( KEYCTL_READ, %ld, %#lx, %ld )", ARG2,ARG3,ARG4);
+      PRINT("sys_keyctl ( KEYCTL_READ, %"PRIdREG", %#"PRIxREG", %"PRIdREG" )", ARG2,ARG3,ARG4);
       PRE_REG_READ4(long, "keyctl(KEYCTL_READ)",
                     int, option, vki_key_serial_t, keyring, 
                     char *, buffer, vki_size_t, buflen);
@@ -4967,7 +4967,7 @@ PRE(sys_keyctl)
          PRE_MEM_WRITE("keyctl(KEYCTL_READ, buffer)", ARG3, ARG4);
       break;
    case VKI_KEYCTL_INSTANTIATE:
-      PRINT("sys_keyctl ( KEYCTL_INSTANTIATE, %ld, %#lx, %ld, %ld )",
+      PRINT("sys_keyctl ( KEYCTL_INSTANTIATE, %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIdREG" )",
             ARG2,ARG3,ARG4,ARG5);
       PRE_REG_READ5(long, "keyctl(KEYCTL_INSTANTIATE)",
                     int, option, vki_key_serial_t, key, 
@@ -4977,28 +4977,28 @@ PRE(sys_keyctl)
          PRE_MEM_READ("keyctl(KEYCTL_INSTANTIATE, payload)", ARG3, ARG4);
       break;
    case VKI_KEYCTL_NEGATE:
-      PRINT("sys_keyctl ( KEYCTL_NEGATE, %ld, %lu, %ld )", ARG2,ARG3,ARG4);
+      PRINT("sys_keyctl ( KEYCTL_NEGATE, %"PRIdREG", %"PRIuREG", %"PRIdREG" )", ARG2,ARG3,ARG4);
       PRE_REG_READ4(long, "keyctl(KEYCTL_NEGATE)",
                     int, option, vki_key_serial_t, key, 
                     unsigned, timeout, vki_key_serial_t, keyring);
       break;
    case VKI_KEYCTL_SET_REQKEY_KEYRING:
-      PRINT("sys_keyctl ( KEYCTL_SET_REQKEY_KEYRING, %ld )", ARG2);
+      PRINT("sys_keyctl ( KEYCTL_SET_REQKEY_KEYRING, %"PRIdREG" )", ARG2);
       PRE_REG_READ2(long, "keyctl(KEYCTL_SET_REQKEY_KEYRING)",
                     int, option, int, reqkey_defl);
       break;
    case VKI_KEYCTL_SET_TIMEOUT:
-      PRINT("sys_keyctl ( KEYCTL_SET_TIMEOUT, %ld, %ld )", ARG2,ARG3);
+      PRINT("sys_keyctl ( KEYCTL_SET_TIMEOUT, %"PRIdREG", %"PRIdREG" )", ARG2,ARG3);
       PRE_REG_READ3(long, "keyctl(KEYCTL_SET_TIMEOUT)",
                     int, option, vki_key_serial_t, key, unsigned, timeout);
       break;
    case VKI_KEYCTL_ASSUME_AUTHORITY:
-      PRINT("sys_keyctl ( KEYCTL_ASSUME_AUTHORITY, %ld )", ARG2);
+      PRINT("sys_keyctl ( KEYCTL_ASSUME_AUTHORITY, %"PRIdREG" )", ARG2);
       PRE_REG_READ2(long, "keyctl(KEYCTL_ASSUME_AUTHORITY)",
                     int, option, vki_key_serial_t, key);
       break;
    default:
-      PRINT("sys_keyctl ( %ld ) ", ARG1);
+      PRINT("sys_keyctl ( %"PRIdREG" ) ", ARG1);
       PRE_REG_READ1(long, "keyctl", int, option);
       break;
    }
@@ -5026,13 +5026,13 @@ POST(sys_keyctl)
 
 PRE(sys_ioprio_set)
 {
-   PRINT("sys_ioprio_set ( %ld, %ld, %ld )", ARG1,ARG2,ARG3);
+   PRINT("sys_ioprio_set ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
    PRE_REG_READ3(int, "ioprio_set", int, which, int, who, int, ioprio);
 }
 
 PRE(sys_ioprio_get)
 {
-   PRINT("sys_ioprio_get ( %ld, %ld )", ARG1,ARG2);
+   PRINT("sys_ioprio_get ( %"PRIdREG", %"PRIdREG" )", ARG1,ARG2);
    PRE_REG_READ2(int, "ioprio_get", int, which, int, who);
 }
 
@@ -5043,7 +5043,7 @@ PRE(sys_ioprio_get)
 PRE(sys_init_module)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_init_module ( %#lx, %llu, %#lx(\"%s\") )",
+   PRINT("sys_init_module ( %#"PRIxREG", %llu, %#"PRIxREG"(\"%s\") )",
          ARG1, (ULong)ARG2, ARG3, (char*)ARG3);
    PRE_REG_READ3(long, "init_module",
                  void *, umod, unsigned long, len, const char *, uargs);
@@ -5054,7 +5054,7 @@ PRE(sys_init_module)
 PRE(sys_delete_module)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_delete_module ( %#lx(\"%s\"), 0x%lx )", ARG1,(char*)ARG1, ARG2);
+   PRINT("sys_delete_module ( %#"PRIxREG"(\"%s\"), 0x%"PRIxREG" )", ARG1,(char*)ARG1, ARG2);
    PRE_REG_READ2(long, "delete_module",
                  const char *, name_user, unsigned int, flags);
    PRE_MEM_RASCIIZ("delete_module(name_user)", ARG1);
@@ -5067,7 +5067,7 @@ PRE(sys_delete_module)
 PRE(sys_splice)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_splice ( %ld, %#lx, %ld, %#lx, %ld, %ld )",
+   PRINT("sys_splice ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIdREG" )",
          ARG1,ARG2,ARG3,ARG4,ARG5,ARG6);
    PRE_REG_READ6(vki_ssize_t, "splice",
                  int, fd_in, vki_loff_t *, off_in,
@@ -5087,7 +5087,7 @@ PRE(sys_splice)
 PRE(sys_tee)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_tree ( %ld, %ld, %ld, %ld )", ARG1,ARG2,ARG3,ARG4);
+   PRINT("sys_tree ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(vki_ssize_t, "tee",
                  int, fd_in, int, fd_out,
                  vki_size_t, len, unsigned int, flags);
@@ -5101,7 +5101,7 @@ PRE(sys_vmsplice)
 {
    Int fdfl;
    *flags |= SfMayBlock;
-   PRINT("sys_vmsplice ( %ld, %#lx, %ld, %ld )",
+   PRINT("sys_vmsplice ( %"PRIdREG", %#"PRIxREG", %"PRIdREG", %"PRIdREG" )",
          ARG1,ARG2,ARG3,ARG4);
    PRE_REG_READ4(vki_ssize_t, "splice",
                  int, fd, struct vki_iovec *, iov,
@@ -5149,7 +5149,7 @@ POST(sys_vmsplice)
 #if defined(VGP_x86_linux)
 PRE(sys_lookup_dcookie)
 {
-   PRINT("sys_lookup_dcookie (0x%llx, %#lx, %ld)",
+   PRINT("sys_lookup_dcookie (0x%llx, %#"PRIxREG", %"PRIdREG")",
          MERGE64(ARG1,ARG2), ARG3, ARG4);
    PRE_REG_READ4(long, "lookup_dcookie",
                  vki_u32, MERGE64_FIRST(cookie), vki_u32, MERGE64_SECOND(cookie),
@@ -5168,7 +5168,7 @@ POST(sys_lookup_dcookie)
 PRE(sys_lookup_dcookie)
 {
    *flags |= SfMayBlock;
-   PRINT("sys_lookup_dcookie ( %llu, %#lx, %llu )",
+   PRINT("sys_lookup_dcookie ( %llu, %#"PRIxREG", %llu )",
 	 (ULong)ARG1, ARG2, (ULong)ARG3);
    PRE_REG_READ3(int, "lookup_dcookie",
                  unsigned long long, cookie, char *, buf, vki_size_t, len);
@@ -5198,7 +5198,7 @@ PRE(sys_fcntl)
    case VKI_F_GETSIG:
    case VKI_F_GETLEASE:
    case VKI_F_GETPIPE_SZ:
-      PRINT("sys_fcntl ( %ld, %ld )", ARG1,ARG2);
+      PRINT("sys_fcntl ( %"PRIdREG", %"PRIdREG" )", ARG1,ARG2);
       PRE_REG_READ2(long, "fcntl", unsigned int, fd, unsigned int, cmd);
       break;
 
@@ -5212,7 +5212,7 @@ PRE(sys_fcntl)
    case VKI_F_SETOWN:
    case VKI_F_SETSIG:
    case VKI_F_SETPIPE_SZ:
-      PRINT("sys_fcntl[ARG3=='arg'] ( %ld, %ld, %ld )", ARG1,ARG2,ARG3);
+      PRINT("sys_fcntl[ARG3=='arg'] ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
       PRE_REG_READ3(long, "fcntl",
                     unsigned int, fd, unsigned int, cmd, unsigned long, arg);
       break;
@@ -5229,14 +5229,14 @@ PRE(sys_fcntl)
    case VKI_F_OFD_GETLK:
    case VKI_F_OFD_SETLK:
    case VKI_F_OFD_SETLKW:
-      PRINT("sys_fcntl[ARG3=='lock'] ( %ld, %ld, %#lx )", ARG1,ARG2,ARG3);
+      PRINT("sys_fcntl[ARG3=='lock'] ( %"PRIdREG", %"PRIdREG", %#"PRIxREG" )", ARG1,ARG2,ARG3);
       PRE_REG_READ3(long, "fcntl",
                     unsigned int, fd, unsigned int, cmd,
                     struct flock64 *, lock);
       break;
 
    case VKI_F_SETOWN_EX:
-      PRINT("sys_fcntl[F_SETOWN_EX] ( %ld, %ld, %ld )", ARG1,ARG2,ARG3);
+      PRINT("sys_fcntl[F_SETOWN_EX] ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
       PRE_REG_READ3(long, "fcntl",
                     unsigned int, fd, unsigned int, cmd,
                     struct vki_f_owner_ex *, arg);
@@ -5244,7 +5244,7 @@ PRE(sys_fcntl)
       break;
 
    case VKI_F_GETOWN_EX:
-      PRINT("sys_fcntl[F_GETOWN_EX] ( %ld, %ld, %ld )", ARG1,ARG2,ARG3);
+      PRINT("sys_fcntl[F_GETOWN_EX] ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
       PRE_REG_READ3(long, "fcntl",
                     unsigned int, fd, unsigned int, cmd,
                     struct vki_f_owner_ex *, arg);
@@ -5252,7 +5252,7 @@ PRE(sys_fcntl)
       break;
 
    default:
-      PRINT("sys_fcntl[UNKNOWN] ( %ld, %ld, %ld )", ARG1,ARG2,ARG3);
+      PRINT("sys_fcntl[UNKNOWN] ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
       I_die_here;
       break;
    }
@@ -5302,7 +5302,7 @@ PRE(sys_fcntl64)
    case VKI_F_GETSIG:
    case VKI_F_SETSIG:
    case VKI_F_GETLEASE:
-      PRINT("sys_fcntl64 ( %ld, %ld )", ARG1,ARG2);
+      PRINT("sys_fcntl64 ( %"PRIdREG", %"PRIdREG" )", ARG1,ARG2);
       PRE_REG_READ2(long, "fcntl64", unsigned int, fd, unsigned int, cmd);
       break;
 
@@ -5313,7 +5313,7 @@ PRE(sys_fcntl64)
    case VKI_F_SETFL:
    case VKI_F_SETLEASE:
    case VKI_F_NOTIFY:
-      PRINT("sys_fcntl64[ARG3=='arg'] ( %ld, %ld, %ld )", ARG1,ARG2,ARG3);
+      PRINT("sys_fcntl64[ARG3=='arg'] ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
       PRE_REG_READ3(long, "fcntl64",
                     unsigned int, fd, unsigned int, cmd, unsigned long, arg);
       break;
@@ -5330,14 +5330,14 @@ PRE(sys_fcntl64)
    case VKI_F_OFD_GETLK:
    case VKI_F_OFD_SETLK:
    case VKI_F_OFD_SETLKW:
-      PRINT("sys_fcntl64[ARG3=='lock'] ( %ld, %ld, %#lx )", ARG1,ARG2,ARG3);
+      PRINT("sys_fcntl64[ARG3=='lock'] ( %"PRIdREG", %"PRIdREG", %#"PRIxREG" )", ARG1,ARG2,ARG3);
       PRE_REG_READ3(long, "fcntl64",
                     unsigned int, fd, unsigned int, cmd,
                     struct flock64 *, lock);
       break;
 
    case VKI_F_SETOWN_EX:
-      PRINT("sys_fcntl[F_SETOWN_EX] ( %ld, %ld, %ld )", ARG1,ARG2,ARG3);
+      PRINT("sys_fcntl[F_SETOWN_EX] ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
       PRE_REG_READ3(long, "fcntl",
                     unsigned int, fd, unsigned int, cmd,
                     struct vki_f_owner_ex *, arg);
@@ -5345,7 +5345,7 @@ PRE(sys_fcntl64)
       break;
 
    case VKI_F_GETOWN_EX:
-      PRINT("sys_fcntl[F_GETOWN_EX] ( %ld, %ld, %ld )", ARG1,ARG2,ARG3);
+      PRINT("sys_fcntl[F_GETOWN_EX] ( %"PRIdREG", %"PRIdREG", %"PRIdREG" )", ARG1,ARG2,ARG3);
       PRE_REG_READ3(long, "fcntl",
                     unsigned int, fd, unsigned int, cmd,
                     struct vki_f_owner_ex *, arg);
@@ -5448,13 +5448,13 @@ PRE(sys_ioctl)
 
    /* V4L2 */
    case VKI_V4L2_LOG_STATUS:
-      PRINT("sys_ioctl ( %ld, 0x%lx )",ARG1,ARG2);
+      PRINT("sys_ioctl ( %"PRIdREG", 0x%"PRIxREG" )",ARG1,ARG2);
       PRE_REG_READ2(long, "ioctl",
                     unsigned int, fd, unsigned int, request);
       return;
 
    default:
-      PRINT("sys_ioctl ( %ld, 0x%lx, 0x%lx )",ARG1,ARG2,ARG3);
+      PRINT("sys_ioctl ( %"PRIdREG", 0x%"PRIxREG", 0x%"PRIxREG" )",ARG1,ARG2,ARG3);
       PRE_REG_READ3(long, "ioctl",
                     unsigned int, fd, unsigned int, request, unsigned long, arg);
       break;
@@ -10124,7 +10124,7 @@ ML_(linux_POST_getregset) ( ThreadId tid, long arg3, long arg4 )
 
 PRE(sys_kcmp)
 {
-   PRINT("kcmp ( %ld, %ld, %ld, %lu, %lu )", ARG1, ARG2, ARG3, ARG4, ARG5);
+   PRINT("kcmp ( %"PRIdREG", %"PRIdREG", %"PRIdREG", %"PRIuREG", %"PRIuREG" )", ARG1, ARG2, ARG3, ARG4, ARG5);
    switch (ARG3) {
       case VKI_KCMP_VM: case VKI_KCMP_FILES: case VKI_KCMP_FS:
       case VKI_KCMP_SIGHAND: case VKI_KCMP_IO: case VKI_KCMP_SYSVSEM:

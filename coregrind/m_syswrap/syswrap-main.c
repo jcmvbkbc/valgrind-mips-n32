@@ -1914,7 +1914,7 @@ void VG_(post_syscall) (ThreadId tid)
 
    /* Do any post-syscall actions required by the tool. */
    if (VG_(needs).syscall_wrapper) {
-      UWord tmpv[8];
+      UReg tmpv[8];
       tmpv[0] = sci->orig_args.arg1;
       tmpv[1] = sci->orig_args.arg2;
       tmpv[2] = sci->orig_args.arg3;
